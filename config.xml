@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : config.xml
+    Created on : June 11, 2012, 7:38 PM
+    Author     : rwincewicz
+    Description:
+        Purpose of the document follows.
+-->
+
+<config>
+    <fedora>
+        <host>192.168.200.140</host>
+        <port>8080</port>
+        <username>fedoraAdmin</username>
+        <password>fedoraAdmin</password>
+    </fedora>
+    <stomp>
+        <host>192.168.200.140</host>
+        <port>61613</port>
+        <channel>/topic/fedora.apim.update</channel>
+    </stomp>
+    <plugin>
+        <dsid>TN</dsid>
+        <class>Test1</class>
+        <function>Test1</function>
+    </plugin>
+    <plugin>
+        <dsid>DC</dsid>
+        <class>Test2</class>
+        <function>Test2</function>
+    </plugin>
+    <plugin>
+        <dsid>SMALL</dsid>
+        <class>Test3</class>
+        <function>Test3</function>
+    </plugin>
+    <log>
+    <file>listener.log</file>
+    <!-- Log level 1 = debug, 2 = info, 3 = error, 4 = critical -->
+    <level>1</level>
+    </log>
+</config>
