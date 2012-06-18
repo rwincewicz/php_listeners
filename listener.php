@@ -1,119 +1,113 @@
 <?php
 
+fclose(STDIN);
+fclose(STDOUT);
+fclose(STDERR);
+$STDIN = fopen('/dev/null', 'r');
+$STDOUT = fopen('application.log', 'wb');
+$STDERR = fopen('error.log', 'wb');
+
 // Include libraries
 require_once("Stomp.php");
 include_once 'message.php';
 include_once 'fedoraConnection.php';
+include_once 'connect.php';
+
+$config_file = file_get_contents('config.xml');
+$config_xml = new SimpleXMLElement($config_file);
+
+$children = $config_xml->listeners->child_processes;
 
 // Handle interrupt signals
+ini_set('display_errors', 0);
+print "Parent : " . getmypid() . "\n";
+
+global $pids;
+$pids = Array();
+
+// Daemonize
+$pid = pcntl_fork();
+if ($pid) {
+  // Only the parent will know the PID. Kids aren't self-aware
+  // Parent says goodbye!
+  print "\tParent : " . getmypid() . " exiting\n";
+  exit();
+}
+
+print "Child : " . getmypid() . "\n";
+
+// Handle signals so we can exit nicely
 declare(ticks = 1);
+
+function sig_handler($signo) {
+  global $pids, $pidFileWritten;
+  if ($signo == SIGTERM || $signo == SIGHUP || $signo == SIGINT) {
+    // If we are being restarted or killed, quit all children
+    // Send the same signal to the children which we recieved
+    foreach ($pids as $p) {
+      posix_kill($p, $signo);
+    }
+
+    // Women and Children first (let them exit)
+    foreach ($pids as $p) {
+      pcntl_waitpid($p, $status);
+    }
+    print "Parent : " . getmypid() . " all my kids should be gone now. Exiting.\n";
+    exit();
+  }
+  else if ($signo == SIGUSR1) {
+    print "I currently have " . count($pids) . " children\n";
+  }
+}
+
+// setup signal handlers to actually catch and direct the signals
 pcntl_signal(SIGTERM, "sig_handler");
 pcntl_signal(SIGHUP, "sig_handler");
 pcntl_signal(SIGINT, "sig_handler");
 pcntl_signal(SIGUSR1, "sig_handler");
 
-// Load config file
-$config_file = file_get_contents('config.xml');
-$config_xml = new SimpleXMLElement($config_file);
-
-// Logging settings
-$log_file = $config_xml->log->file;
-$log_level = $config_xml->log->level;
-
-$log = new Logging();
-$log->lfile($log_file);
-
-// Set up Fedora settings
-$fedora_url = 'http://' . $config_xml->fedora->host . ':' . $config_xml->fedora->port . '/fedora';
-$user = new stdClass();
-$user->name = $config_xml->fedora->username;
-$user->pass = $config_xml->fedora->password;
-
-// Set up stomp settings
-$stomp_url = 'tcp://' . $config_xml->stomp->host . ':' . $config_xml->stomp->port;
-$channel = $config_xml->stomp->channel;
-
-if ($log_level <= 1) {
-  foreach ($config_xml->plugin as $plugin) {
-    $log->lwrite('Plugin: ' . $plugin->class . ' and ' . $plugin->function . ' on ' . $plugin->dsid);
-  }
-}
-
-// Make a connection
-$con = new Stomp($stomp_url);
-// Connect
-try {
-  $con->connect();
-} catch (Exception $e) {
-  $log->lwrite("Could not connect to Stomp server - $e", 'ERROR');
-}
-// Subscribe to the queue
-try {
-  $con->subscribe((string) $channel[0]);
-} catch (Exception $e) {
-  $log->lwrite("Could not subscribe to the channel $channel - $e", 'ERROR');
-}
-// Receive a message from the queue
+// All the daemon setup work is done now. Now do the actual tasks at hand
+// The program to launch
+$program = "/usr/bin/php";
+$arguments = Array("connect.php");
+$timer = 0;
 while (TRUE) {
-  if ($con->hasFrameToRead()) {
-    $msg = $con->readFrame();
-
-    // do what you want with the message
-    if ($msg != NULL) {
-      $message = new Message($msg->body);
-      if ($msg->headers['methodName'] == 'ingest') {
-        try {
-          $fedora_object = new ListenerObject($user, $fedora_url, $msg->headers['pid']);
-          $object = $fedora_object->object;
-          $temp_file = $fedora_object->saveDatastream('TN');
-          $extension_array = explode('.', $temp_file);
-          $extension = $extension_array[1];
-          $new_file = temp_filename($extension);
-          exec("convert $temp_file -resize 50% $new_file", $output, $return);
-          if ($log_level <= 1) {
-            $log->lwrite("Pid: " . $msg->headers['pid']);
-            $log->lwrite("File: $temp_file");
-            $log->lwrite("New file: $new_file");
-            $log->lwrite("Output: " . implode(', ', $output));
-            $log->lwrite("Return: $return");
-            $log->lwrite("Models: " . implode(', ', $object->models));
-          }
-          $new_datastream = new NewFedoraDatastream('SMALL', 'M', $object, $fedora_object->repository);
-          $new_datastream->setContentFromFile($new_file);
-          $new_datastream->mimetype = 'image/png';
-          $object->ingestDatastream($new_datastream);
-        } catch (Exception $e) {
-          $log->lwrite("An error occurred creating the derivative - $e", 'ERROR');
-        }
-        unset($fedora_object);
-        unset($object);
-        unset($new_datastream);
-        unset($extension);
-        unset($temp_file);
-        unset($extension_array);
-        unset($message);
-      }
-//      else {
-//      }
-      // Mark the message as received in the queue
-      $con->ack($msg);
-      unset($msg);
-      echo "Memory usage: " . memory_get_usage() . "\n";
-      var_dump(gc_enabled()); // true
-      var_dump(gc_collect_cycles()); // # of elements cleaned up
+  // In a real world scenario we would do some sort of conditional launch.
+  // Maybe a condition in a DB is met, or whatever, here we're going to
+  // cap the number of concurrent grandchildren
+  if (count($pids) < $children) {
+    $pid = pcntl_fork();
+    if (!$pid) {
+      pcntl_exec($program, $arguments); // takes an array of arguments
+      exit();
+    }
+    else {
+      // We add pids to a global array, so that when we get a kill signal
+      // we tell the kids to flush and exit.
+      $pids[] = $pid;
     }
   }
-}
 
-// Disconnect
-$con->disconnect();
+  // Collect any children which have exited on their own. pcntl_waitpid will
+  // return the PID that exited or 0 or ERROR
+  // WNOHANG means we won't sit here waiting if there's not a child ready
+  // for us to reap immediately
+  // -1 means any child
+  $dead_and_gone = pcntl_waitpid(-1, $status, WNOHANG);
+  while ($dead_and_gone > 0) {
+    // Remove the gone pid from the array
+    unset($pids[array_search($dead_and_gone, $pids)]);
 
-function sig_handler($signo) { // this function will process sent signals
-  if ($signo == SIGTERM || $signo == SIGHUP || $signo == SIGINT || $signo == SIGUSR1) {
-    print "\tGrandchild : " . getmypid() . " I got signal $signo and will exit!\n";
-// If this were something important we might do data cleanup here
-    exit();
+    // Look for another one
+    $dead_and_gone = pcntl_waitpid(-1, $status, WNOHANG);
   }
+  // Roughly ever 60 seconds print the memory usage
+  if ($timer > 60) {
+    print "Daemon memory usage: " . memory_get_usage() . "\n";
+    $timer = 0;
+  }
+  $timer++;
+  // Sleep for 1 second
+  sleep(1);
 }
-
 ?>

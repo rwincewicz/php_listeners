@@ -60,14 +60,16 @@ class ListenerObject {
     }
   }
 
-  function saveDatastream($dsid = NULL) {
+  function saveDatastream($dsid = NULL, $extension = NULL) {
     if (!isset($dsid)) {
       return;
     }
 
     $datastream = $this->object->getDatastream($dsid);
     $mime_type = $datastream->mimetype;
-    $extension = system_mime_type_extension($mime_type);
+    if (!$extension) {
+      $extension = system_mime_type_extension($mime_type);
+    }
     $tempfile = temp_filename($extension);
     $file_handle = fopen($tempfile, 'w');
     fwrite($file_handle, $datastream->content);

@@ -1,0 +1,76 @@
+Parent : 31745
+	Parent : 31745 exiting
+Child : 31753
+Daemon memory usage: 2230000
+Daemon memory usage: 2230000
+Daemon memory usage: 2230000
+Daemon memory usage: 2229896
+Daemon memory usage: 2229896
+Daemon memory usage: 2230000
+Daemon memory usage: 2230000
+Daemon memory usage: 2230000
+Daemon memory usage: 2230000
+Daemon memory usage: 2230000
+Daemon memory usage: 2229896
+Daemon memory usage: 2229896
+Daemon memory usage: 2230000
+Daemon memory usage: 2230000
+Daemon memory usage: 2230000
+Daemon memory usage: 2230000
+Daemon memory usage: 2230000
+Daemon memory usage: 2229896
+Daemon memory usage: 2229896
+Daemon memory usage: 2230000
+Daemon memory usage: 2230000
+Daemon memory usage: 2230000
+Daemon memory usage: 2230000
+Daemon memory usage: 2230000
+Daemon memory usage: 2229896
+Daemon memory usage: 2229896
+Daemon memory usage: 2230000
+Daemon memory usage: 2230000
+Daemon memory usage: 2230000
+Daemon memory usage: 2230000
+Daemon memory usage: 2230000
+Daemon memory usage: 2229896
+Daemon memory usage: 2229896
+Daemon memory usage: 2230000
+Daemon memory usage: 2230000
+Daemon memory usage: 2230000
+Daemon memory usage: 2230000
+Daemon memory usage: 2229896
+Daemon memory usage: 2230000
+
+Warning: unlink(/tmp/3314808464fdf616594cde.tif_OCR): No such file or directory in /var/www/drupal-7/sites/all/modules/php_listeners/Derivatives.php on line 35
+
+Call Stack:
+    0.0005     360628   1. {main}() /var/www/drupal-7/sites/all/modules/php_listeners/connect.php:0
+    0.0138    2031288   2. Connect->listen() /var/www/drupal-7/sites/all/modules/php_listeners/connect.php:9
+   65.2209    6869992   3. Derivative->OCR() /var/www/drupal-7/sites/all/modules/php_listeners/connect.php:86
+   67.4916    2071152   4. unlink() /var/www/drupal-7/sites/all/modules/php_listeners/Derivatives.php:35
+
+
+Warning: unlink(/tmp/3314808464fdf616594cde.tif_HOCR): No such file or directory in /var/www/drupal-7/sites/all/modules/php_listeners/Derivatives.php on line 54
+
+Call Stack:
+    0.0005     360628   1. {main}() /var/www/drupal-7/sites/all/modules/php_listeners/connect.php:0
+    0.0138    2031288   2. Connect->listen() /var/www/drupal-7/sites/all/modules/php_listeners/connect.php:9
+   67.4918    2070496   3. Derivative->HOCR() /var/www/drupal-7/sites/all/modules/php_listeners/connect.php:87
+   69.8912    2080500   4. unlink() /var/www/drupal-7/sites/all/modules/php_listeners/Derivatives.php:54
+
+Daemon memory usage: 2230000
+Daemon memory usage: 2229896
+Daemon memory usage: 2229896
+Daemon memory usage: 2230000
+Daemon memory usage: 2230000
+Daemon memory usage: 2230000
+Daemon memory usage: 2230000
+Daemon memory usage: 2230000
+Daemon memory usage: 2230000
+Daemon memory usage: 2230000
+Daemon memory usage: 2230000
+Daemon memory usage: 2230000
+Daemon memory usage: 2229896
+Daemon memory usage: 2229896
+Daemon memory usage: 2230000
+Daemon memory usage: 2230000

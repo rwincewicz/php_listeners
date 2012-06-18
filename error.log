@@ -1,0 +1,20 @@
+Page 0
+Page 0
+Page 0
+Page 0
+Page 0
+PHP Warning:  unlink(/tmp/3314808464fdf616594cde.tif_OCR): No such file or directory in /var/www/drupal-7/sites/all/modules/php_listeners/Derivatives.php on line 35
+PHP Stack trace:
+PHP   1. {main}() /var/www/drupal-7/sites/all/modules/php_listeners/connect.php:0
+PHP   2. Connect->listen() /var/www/drupal-7/sites/all/modules/php_listeners/connect.php:9
+PHP   3. Derivative->OCR() /var/www/drupal-7/sites/all/modules/php_listeners/connect.php:86
+PHP   4. unlink() /var/www/drupal-7/sites/all/modules/php_listeners/Derivatives.php:35
+Page 0
+PHP Warning:  unlink(/tmp/3314808464fdf616594cde.tif_HOCR): No such file or directory in /var/www/drupal-7/sites/all/modules/php_listeners/Derivatives.php on line 54
+PHP Stack trace:
+PHP   1. {main}() /var/www/drupal-7/sites/all/modules/php_listeners/connect.php:0
+PHP   2. Connect->listen() /var/www/drupal-7/sites/all/modules/php_listeners/connect.php:9
+PHP   3. Derivative->HOCR() /var/www/drupal-7/sites/all/modules/php_listeners/connect.php:87
+PHP   4. unlink() /var/www/drupal-7/sites/all/modules/php_listeners/Derivatives.php:54
+Page 0
+Page 0

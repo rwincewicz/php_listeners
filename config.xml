@@ -5,10 +5,13 @@
     Created on : June 11, 2012, 7:38 PM
     Author     : rwincewicz
     Description:
-        Purpose of the document follows.
+        Configuration file for php-based listeners.
 -->
 
 <config>
+    <listeners>
+        <child_processes>2</child_processes>    
+    </listeners>
     <fedora>
         <host>192.168.200.140</host>
         <port>8080</port>
@@ -18,26 +21,25 @@
     <stomp>
         <host>192.168.200.140</host>
         <port>61613</port>
-        <channel>/topic/fedora.apim.update</channel>
+        <channel>/queue/listener.update</channel>
     </stomp>
-    <plugin>
-        <dsid>TN</dsid>
-        <class>Test1</class>
-        <function>Test1</function>
-    </plugin>
-    <plugin>
-        <dsid>DC</dsid>
-        <class>Test2</class>
-        <function>Test2</function>
-    </plugin>
-    <plugin>
-        <dsid>SMALL</dsid>
-        <class>Test3</class>
-        <function>Test3</function>
-    </plugin>
+    <derivatives>
+        <derivative>
+            <dsid>TN</dsid>
+            <function>TN</function>
+        </derivative>
+        <derivative>
+            <dsid>JPG</dsid>
+            <function>JPG</function>
+        </derivative>
+        <derivative>
+            <dsid>OCR</dsid>
+            <function>OCR</function>
+        </derivative>
+    </derivatives>
     <log>
-    <file>listener.log</file>
+        <file>listener.log</file>
     <!-- Log level 1 = debug, 2 = info, 3 = error, 4 = critical -->
-    <level>1</level>
+        <level>1</level>
     </log>
 </config>
