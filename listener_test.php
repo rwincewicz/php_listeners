@@ -15,11 +15,6 @@ while (TRUE) {
     $pid = 'islandora:' . rand('100', '999999');
     $object = $fedora_object->repository->constructObject($pid);
     $object->label = 'Test';
-//    $datastream = $object->constructDatastream('TN', 'M');
-//    $datastream->label = 'TN';
-//    $datastream->mimetype = 'image/png';
-//    $datastream->setContentFromFile('Crystal_Clear_action_filenew.png');
-//    $object->ingestDatastream($datastream);
     $datastream2 = $object->constructDatastream('TIFF', 'M');
     $datastream2->label = 'Tiff';
     $datastream2->mimetype = 'image/tiff';

@@ -1,3 +1,5 @@
 *.tif
 *.png
 *.log
+config.xml
+*.xslt

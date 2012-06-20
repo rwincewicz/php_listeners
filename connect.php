@@ -21,35 +21,35 @@ class Connect {
 
     // Load config file
     $config_file = file_get_contents('config.xml');
-    $config_xml = new SimpleXMLElement($config_file);
+    $this->config_xml = new SimpleXMLElement($config_file);
 
-// Logging settings
-    $log_file = $config_xml->log->file;
-    $this->log->level = $config_xml->log->level;
+    // Logging settings
+    $log_file = $this->config_xml->log->file;
+    $this->log->level = $this->config_xml->log->level;
 
     $this->log = new Logging();
     $this->log->lfile($log_file);
 
-    $this->fedora_url = 'http://' . $config_xml->fedora->host . ':' . $config_xml->fedora->port . '/fedora';
+    $this->fedora_url = 'http://' . $this->config_xml->fedora->host . ':' . $this->config_xml->fedora->port . '/fedora';
     $this->user = new stdClass();
-    $this->user->name = $config_xml->fedora->username;
-    $this->user->pass = $config_xml->fedora->password;
+    $this->user->name = $this->config_xml->fedora->username;
+    $this->user->pass = $this->config_xml->fedora->password;
 
-// Set up stomp settings
-    $stomp_url = 'tcp://' . $config_xml->stomp->host . ':' . $config_xml->stomp->port;
-    $channel = $config_xml->stomp->channel;
+    // Set up stomp settings
+    $stomp_url = 'tcp://' . $this->config_xml->stomp->host . ':' . $this->config_xml->stomp->port;
+    $channel = $this->config_xml->stomp->channel;
 
-// Make a connection
+    // Make a connection
     $this->con = new Stomp($stomp_url);
     $this->con->sync = FALSE;
     $this->con->setReadTimeout(5);
-// Connect
+    // Connect
     try {
       $this->con->connect();
     } catch (Exception $e) {
       $this->log->lwrite("Could not connect to Stomp server - $e", 'ERROR');
     }
-// Subscribe to the queue
+    // Subscribe to the queue
     try {
       $this->con->subscribe((string) $channel[0], array('activemq.prefetchSize' => 100));
     } catch (Exception $e) {
@@ -68,34 +68,55 @@ class Connect {
         $this->log->lwrite("Pid: " . $this->msg->headers['pid']);
         $this->log->lwrite("Method: " . $this->msg->headers['methodName']);
         $this->log->lwrite("Owner: " . $message->author);
+        try {
+          $fedora_object = new ListenerObject($this->user, $this->fedora_url, $this->msg->headers['pid']);
+        } catch (Exception $e) {
+          $this->log->lwrite("An error occurred creating the fedora object - $e", 'ERROR');
+        }
+        $this->log->lwrite("Models: " . implode(', ', $fedora_object->object->models));
+
         $properties = get_object_vars($message);
+        $object_namespace_array = explode(':', $this->msg->headers['pid']);
+        $object_namespace = $object_namespace_array[0];
+
         if (array_key_exists('dsID', $properties)) {
           $this->log->lwrite("DSID: " . $message->dsID);
           $this->log->lwrite("Label: " . $message->dsLabel);
           $this->log->lwrite("Control group: " . $message->controlGroup);
         }
-        if ($this->msg->headers['methodName'] == 'ingest') {
-          sleep(1);
-          try {
-            $fedora_object = new ListenerObject($this->user, $this->fedora_url, $this->msg->headers['pid']);
-          } catch (Exception $e) {
-            $this->log->lwrite("An error occurred creating the fedora object - $e", 'ERROR');
-          }
-          $this->log->lwrite("Models: " . implode(', ', $fedora_object->object->models));
-          $derivatives = new Derivative($fedora_object, 'TIFF', $this->log);
-          $derivatives->OCR();
-          $derivatives->HOCR();
-          $derivatives->TN();
-          $derivatives->JPG();
-          $derivatives->JP2();
+        $objects = $this->config_xml->xpath('//object');
 
-          unset($fedora_object);
-          unset($object);
+        foreach ($objects as $object) {
+          $namespaces = $object->nameSpace;
+          $content_models = $object->xpath('//contentModel');
+          $methods = $object->xpath('//method');
+          $datastream = $this->config_xml->derivatives->object->datastream;
+          $new_datastreams = $object->derivative;
+          foreach ($content_models as $content_model) {
+            if (in_array($content_model, $fedora_object->object->models)) {
+              foreach ($namespaces as $namespace) {
+                if ((string) $namespace == (string) $object_namespace) {
+                  if (in_array($this->msg->headers['methodName'], $methods)) {
+                    $derivative = new Derivative($fedora_object, $datastream, $this->log);
+                    foreach ($new_datastreams as $new_datastream) {
+                      $this->log->lwrite('Adding datastream ' . $new_datastream->dsid . ' with label ' . $new_datastream->label . ' using function ' . $new_datastream->function);
+                      $function = (string) $new_datastream->function;
+                      $derivative->{$function}((string) $new_datastream->dsid, (string) $new_datastream->label);
+                    }
+                  }
+                }
+              }
+            }
+          }
+          unset($namespaces);
+          unset($namespace);
+          unset($content_models);
+          unset($content_model);
+          unset($methods);
+          unset($datastream);
+          unset($new_datastreams);
           unset($new_datastream);
-          unset($extension);
-          unset($temp_file);
-          unset($extension_array);
-          unset($message);
+          unset($derivative);
         }
 
         // Mark the message as received in the queue
@@ -105,7 +126,7 @@ class Connect {
       $this->log->lwrite("Child memory usage: " . memory_get_usage());
       $this->log->lwrite("Garbage collection enabled: " . gc_enabled()); // true
       $this->log->lwrite("Garbage collected: " . gc_collect_cycles()); // # of elements cleaned up
-// Disconnect
+      // Disconnect
       $this->con->disconnect();
       // Close log file
       $this->log->lclose();

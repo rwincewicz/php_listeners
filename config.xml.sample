@@ -29,12 +29,10 @@
     
     <derivatives>
         <object>
-            <nameSpace>islandora</nameSpace>
             <contentModel>fedora-system:FedoraObject-3.0</contentModel>
             <contentModel>fedora-system:FedoraObject-2.0</contentModel>
             <method>ingest</method>
             <method>test</method>
-            <datastream>TIFF</datastream>
             <derivative>
                 <dsid>TN</dsid>
                 <label>Thumbnail</label>
@@ -50,39 +48,6 @@
                 <label>OCR</label>
                 <function>OCR</function>
             </derivative>
-            <derivative>
-                <dsid>HOCR</dsid>
-                <label>HOCR</label>
-                <function>HOCR</function>
-            </derivative>  
-            <derivative>
-                <dsid>ENCODED_OCR</dsid>
-                <label>Encoded OCR</label>
-                <function>ENCODED_OCR</function>
-            </derivative>              
-        </object>
-        <object>
-            <nameSpace>leg</nameSpace>
-            <contentModel>fedora-system:FedoraObject-3.0</contentModel>
-            <contentModel>fedora-system:FedoraObject-2.0</contentModel>
-            <method>ingest</method>
-            <method>test</method>
-            <datastream>TIFF</datastream>
-            <derivative>
-                <dsid>TN</dsid>
-                <label>Thumbnail</label>
-                <function>TN</function>
-            </derivative>
-            <derivative>
-                <dsid>TECHMD</dsid>
-                <label>Technical metadata</label>
-                <function>TECHMD</function>
-            </derivative>   
-            <derivative>
-                <dsid>ENCODED_OCR</dsid>
-                <label>Encoded OCR</label>
-                <function>ENCODED_OCR</function>
-            </derivative>              
         </object>
     </derivatives>
     
