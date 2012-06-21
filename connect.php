@@ -65,18 +65,25 @@ class Connect {
       // do what you want with the message
       if ($this->msg != NULL) {
         $message = new Message($this->msg->body);
-        $this->log->lwrite("Pid: " . $this->msg->headers['pid']);
+        $pid = $this->msg->headers['pid'];
+        $this->log->lwrite("Pid: " . $pid);
         $this->log->lwrite("Method: " . $this->msg->headers['methodName']);
         $this->log->lwrite("Owner: " . $message->author);
         try {
-          $fedora_object = new ListenerObject($this->user, $this->fedora_url, $this->msg->headers['pid']);
+          if (fedora_object_exists($this->fedora_url, $this->user, $pid) === FALSE) {
+            $this->log->lwrite("Could not find object $pid", 'ERROR');
+            $this->con->ack($this->msg);
+            unset($this->msg);
+            return;
+          }
+          $fedora_object = new ListenerObject($this->user, $this->fedora_url, $pid);
         } catch (Exception $e) {
           $this->log->lwrite("An error occurred creating the fedora object - $e", 'ERROR');
         }
         $this->log->lwrite("Models: " . implode(', ', $fedora_object->object->models));
 
         $properties = get_object_vars($message);
-        $object_namespace_array = explode(':', $this->msg->headers['pid']);
+        $object_namespace_array = explode(':', $pid);
         $object_namespace = $object_namespace_array[0];
 
         if (array_key_exists('dsID', $properties)) {

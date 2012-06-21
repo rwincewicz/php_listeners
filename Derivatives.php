@@ -24,7 +24,7 @@ class Derivative {
     unlink($this->temp_file);
   }
 
-  function OCR($dsid = 'OCR', $label = 'OCR', $language = 'eng') {
+  function OCR($dsid = 'OCR', $label = 'Scanned text', $language = 'eng') {
     try {
       $output_file = $this->temp_file . '_OCR';
       exec("tesseract $this->temp_file $output_file -l $language", $ocr_output, $return);
@@ -80,6 +80,7 @@ class Derivative {
       $proc = new XSLTProcessor();
       $proc->importStylesheet($xsl);
       $encoded_xml = $proc->transformToXml($hocr_xml);
+      $encoded_xml = str_replace('<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">', '<?xml version="1.0" encoding="UTF-8"?>', $encoded_xml);
       $encoded_datastream = new NewFedoraDatastream($dsid, 'M', $this->object, $this->fedora_object->repository);
       $encoded_datastream->setContentFromString($encoded_xml);
       $encoded_datastream->label = $label;
@@ -94,7 +95,7 @@ class Derivative {
     return $return;
   }  
 
-  function JP2($dsid = 'JP2', $label = 'JP2') {
+  function JP2($dsid = 'JP2', $label = 'Compressed jp2') {
     try {
       $output_file = $this->temp_file . '_JP2.jp2';
       exec("kdu_compress -i $this->temp_file -o $output_file -rate 0.5 Clayers=1 Clevels=7 Cprecincts={256,256},{256,256},{256,256},{128,128},{128,128},{64,64},{64,64},{32,32},{16,16} Corder=RPCL ORGgen_plt=yes ORGtparts=R Cblk={32,32} Cuse_sop=yes", $jp2_output, $return);
@@ -113,7 +114,7 @@ class Derivative {
     return $return;
   }
 
-  function TN($dsid = 'TN', $label = 'Thumbnail image', $height = '200', $width = '200') {
+  function TN($dsid = 'TN', $label = 'Thumbnail', $height = '200', $width = '200') {
     try {
       $output_file = $this->temp_file . '_TN.jpg';
       exec("convert -thumbnail " . $height . "x" . $width . " $this->temp_file $output_file", $tn_output, $return);
@@ -154,7 +155,7 @@ class Derivative {
   function TECHMD($dsid = 'TECHMD', $label = 'Technical metadata') {
     try {
       $output_file = $this->temp_file . '_TECHMD.xml';
-      exec("/opt/fits/fits.sh -i $this->temp_file -o $output_file -xc", $techmd_output, $return);
+      exec("/opt/fits/fits.sh -i $this->temp_file -o $output_file", $techmd_output, $return);
       $this->log->lwrite("TECHMD output: " . implode("\n", $techmd_output));
       $techmd_datastream = new NewFedoraDatastream($dsid, 'M', $this->object, $this->fedora_object->repository);
       $techmd_datastream->setContentFromFile($output_file);

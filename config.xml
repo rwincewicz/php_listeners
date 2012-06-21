@@ -42,12 +42,17 @@
             </derivative>
             <derivative>
                 <dsid>JPG</dsid>
-                <label>JPG image</label>
+                <label>JPEG image</label>
                 <function>JPG</function>
             </derivative>
             <derivative>
+                <dsid>JP2</dsid>
+                <label>Compressed jp2</label>
+                <function>JP2</function>
+            </derivative>  
+            <derivative>
                 <dsid>OCR</dsid>
-                <label>OCR</label>
+                <label>Scanned text</label>
                 <function>OCR</function>
             </derivative>
             <derivative>
@@ -59,7 +64,12 @@
                 <dsid>ENCODED_OCR</dsid>
                 <label>Encoded OCR</label>
                 <function>ENCODED_OCR</function>
-            </derivative>              
+            </derivative>     
+            <derivative>
+                <dsid>TECHMD</dsid>
+                <label>Technical metadata</label>
+                <function>TECHMD</function>
+            </derivative> 
         </object>
         <object>
             <nameSpace>leg</nameSpace>

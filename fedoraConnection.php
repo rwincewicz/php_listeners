@@ -1,15 +1,15 @@
 <?php
 
 //do this until we expost these in a module or library
-@include_once '../../libraries/tuque/Datastream.php';
-@include_once '../../libraries/tuque/FedoraApi.php';
-@include_once '../../libraries/tuque/FedoraApiSerializer.php';
-@include_once '../../libraries/tuque/Object.php';
-@include_once '../../libraries/tuque/RepositoryConnection.php';
-@include_once '../../libraries/tuque/Cache.php';
-@include_once '../../libraries/tuque/RepositoryException.php';
-@include_once '../../libraries/tuque/Repository.php';
-@include_once '../../libraries/tuque/FedoraRelationships.php';
+@include_once 'tuque/Datastream.php';
+@include_once 'tuque/FedoraApi.php';
+@include_once 'tuque/FedoraApiSerializer.php';
+@include_once 'tuque/Object.php';
+@include_once 'tuque/RepositoryConnection.php';
+@include_once 'tuque/Cache.php';
+@include_once 'tuque/RepositoryException.php';
+@include_once 'tuque/Repository.php';
+@include_once 'tuque/FedoraRelationships.php';
 
 class ListenerObject {
 
@@ -155,6 +155,30 @@ function temp_filename($extension = NULL) {
       break;
   }
   return $filename;
+}
+
+function fedora_object_exists($fedora_url = 'http://localhost:8080/fedora', $user = NULL, $pid = NULL) {
+  if (!isset($pid)) {
+    return;
+  }
+
+  $fedora_user = $user->name;
+  $fedora_pass = $user->pass;
+
+  $url = $fedora_url . '/objects/' . $pid;
+
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $url);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERPWD, "$fedora_user:$fedora_pass");
+  $content = curl_exec($ch);
+
+  if ($content == $pid) {
+    return FALSE;
+  }
+  else {
+    return TRUE;
+  }
 }
 
 ?>
