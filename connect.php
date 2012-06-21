@@ -90,7 +90,7 @@ class Connect {
         if (array_key_exists('dsID', $properties)) {
           $this->log->lwrite("DSID: " . $message->dsID);
           $this->log->lwrite("Label: " . $message->dsLabel);
-          $this->log->lwrite("Control group: " . $message->controlGroup);
+//          $this->log->lwrite("Control group: " . $message->controlGroup);
         }
         $objects = $this->config_xml->xpath('//object');
 
