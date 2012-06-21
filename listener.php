@@ -108,6 +108,6 @@ while (TRUE) {
   }
   $timer++;
   // Sleep for 1 second
-  sleep(1);
+  usleep(500);
 }
 ?>
