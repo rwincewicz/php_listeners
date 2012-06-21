@@ -98,7 +98,7 @@ class Derivative {
   function JP2($dsid = 'JP2', $label = 'Compressed jp2') {
     try {
       $output_file = $this->temp_file . '_JP2.jp2';
-      exec('kdu_compress -i ' . $this->temp_file . ' -o ' . $output_file . ' -rate 0.5 Clayers=1 Clevels=7 Cprecincts={256,256},{256,256},{256,256},{128,128},{128,128},{64,64},{64,64},{32,32},{16,16} Corder=RPCL ORGgen_plt=yes ORGtparts=R Cblk={32,32} Cuse_sop=yes', $jp2_output, $return);
+      exec('kdu_compress -i ' . $this->temp_file . ' -o ' . $output_file . ' -rate 0.5 Clayers=1 Clevels=7 Cprecincts=\{256,256\},\{256,256\},\{256,256\},\{128,128\},\{128,128\},\{64,64\},\{64,64\},\{32,32\},\{16,16\} Corder=RPCL ORGgen_plt=yes ORGtparts=R Cblk=\{32,32\} Cuse_sop=yes', $jp2_output, $return);
       $this->log->lwrite("JP2 output: " . implode("\n", $jp2_output));
       $jp2_datastream = new NewFedoraDatastream($dsid, 'M', $this->object, $this->fedora_object->repository);
       $jp2_datastream->setContentFromFile($output_file);
