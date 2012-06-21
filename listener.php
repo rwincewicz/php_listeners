@@ -102,12 +102,12 @@ while (TRUE) {
     $dead_and_gone = pcntl_waitpid(-1, $status, WNOHANG);
   }
   // Roughly ever 60 seconds print the memory usage
-  if ($timer > 120) {
+  if ($timer > 1200) {
     print "Daemon memory usage: " . memory_get_usage() . "\n";
     $timer = 0;
   }
   $timer++;
   // Sleep for 1 second
-  usleep(500000);
+  usleep(50000);
 }
 ?>
