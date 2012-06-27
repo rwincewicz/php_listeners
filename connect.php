@@ -98,6 +98,7 @@ class Connect {
           $namespaces = $object->nameSpace;
           $content_models = $object->contentModel;
           $methods = $object->method;
+          var_dump($methods);
           $datastream = $object->datastream;
           $datastream = (string) $datastream[0];
           $new_datastreams = $object->derivative;
