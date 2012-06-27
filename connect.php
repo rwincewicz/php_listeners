@@ -98,7 +98,7 @@ class Connect {
           $namespaces = $object->nameSpace;
           $content_models = $object->xpath('//contentModel');
           $methods = $object->xpath('//method');
-          $datastream = $this->config_xml->derivatives->object->datastream;
+          $datastream = $object->datastream;
           var_dump($datastream);
           $new_datastreams = $object->derivative;
           $extension = $object->extension;
