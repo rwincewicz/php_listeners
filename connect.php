@@ -99,6 +99,7 @@ class Connect {
           $content_models = $object->xpath('//contentModel');
           $methods = $object->xpath('//method');
           $datastream = $this->config_xml->derivatives->object->datastream;
+          var_dump($datastream);
           $new_datastreams = $object->derivative;
           $extension = $object->extension;
           foreach ($content_models as $content_model) {
