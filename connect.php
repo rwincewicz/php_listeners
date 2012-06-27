@@ -100,12 +100,13 @@ class Connect {
           $methods = $object->xpath('//method');
           $datastream = $this->config_xml->derivatives->object->datastream;
           $new_datastreams = $object->derivative;
+          $extension = $object->extension;
           foreach ($content_models as $content_model) {
             if (in_array($content_model, $fedora_object->object->models)) {
               foreach ($namespaces as $namespace) {
                 if ((string) $namespace == (string) $object_namespace) {
                   if (in_array($this->msg->headers['methodName'], $methods)) {
-                    $derivative = new Derivative($fedora_object, $datastream, $this->log);
+                    $derivative = new Derivative($fedora_object, $datastream, $extension, $this->log);
                     foreach ($new_datastreams as $new_datastream) {
                       $this->log->lwrite('Adding datastream ' . $new_datastream->dsid . ' with label ' . $new_datastream->label . ' using function ' . $new_datastream->function);
                       $function = (string) $new_datastream->function;

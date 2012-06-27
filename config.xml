@@ -35,6 +35,7 @@
             <method>ingest</method>
             <method>test</method>
             <datastream>TIFF</datastream>
+            <extension>tif</extension>
             <derivative>
                 <dsid>TN</dsid>
                 <label>Thumbnail</label>
@@ -78,6 +79,7 @@
             <method>ingest</method>
             <method>test</method>
             <datastream>TIFF</datastream>
+            <extension>tif</extension>
             <derivative>
                 <dsid>TN</dsid>
                 <label>Thumbnail</label>

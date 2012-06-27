@@ -7,7 +7,7 @@
 
 class Derivative {
 
-  function __construct($fedora_object, $dsid, $log) {
+  function __construct($fedora_object, $dsid, $extension = NULL, $log) {
     include_once 'message.php';
     include_once 'fedoraConnection.php';
 
@@ -15,7 +15,10 @@ class Derivative {
     $this->fedora_object = $fedora_object;
     $this->object = $fedora_object->object;
     $this->dsid = $dsid;
-    $this->temp_file = $fedora_object->saveDatastream('TIFF', 'tif');
+    $this->extension = $extension;
+    if ($this->dsid != NULL) {
+      $this->temp_file = $fedora_object->saveDatastream($dsid, $extension);
+    }
     $extension_array = explode('.', $this->temp_file);
     $extension = $extension_array[1];
   }
