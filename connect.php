@@ -99,9 +99,10 @@ class Connect {
           $content_models = $object->xpath('//contentModel');
           $methods = $object->xpath('//method');
           $datastream = $object->datastream;
-          var_dump($datastream);
+          $datastream = (string) $datastream[0];
           $new_datastreams = $object->derivative;
           $extension = $object->extension;
+          $extension = (string) $extension[0];
           foreach ($content_models as $content_model) {
             if (in_array($content_model, $fedora_object->object->models)) {
               foreach ($namespaces as $namespace) {
