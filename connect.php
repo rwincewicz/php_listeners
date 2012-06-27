@@ -97,7 +97,11 @@ class Connect {
         foreach ($objects as $object) {
           $namespaces = $object->nameSpace;
           $content_models = $object->contentModel;
-          $methods = $object->method;
+          $xml_methods = $object->method;
+          $methods = array();
+          foreach ($xml_methods as $xml_method) {
+            $methods[] = (string) $xml_method[0];
+          }
           var_dump($methods);
           $datastream = $object->datastream;
           $datastream = (string) $datastream[0];
