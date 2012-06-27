@@ -97,7 +97,7 @@ class Connect {
         foreach ($objects as $object) {
           $namespaces = $object->nameSpace;
           $content_models = $object->contentModel;
-          $methods = $object->xpath('//method');
+          $methods = $object->method;
           $datastream = $object->datastream;
           $datastream = (string) $datastream[0];
           $new_datastreams = $object->derivative;
