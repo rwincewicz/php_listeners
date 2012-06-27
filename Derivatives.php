@@ -22,7 +22,7 @@ class Derivative {
     $extension_array = explode('.', $this->temp_file);
     $extension = $extension_array[1];
   }
-  
+
   function __destruct() {
     unlink($this->temp_file);
   }
@@ -64,7 +64,7 @@ class Derivative {
     }
     return $return;
   }
-  
+
   function ENCODED_OCR($dsid = 'ENCODED_OCR', $label = 'Encoded OCR', $language = 'eng') {
     try {
       $output_file = $this->temp_file . '_HOCR';
@@ -96,7 +96,7 @@ class Derivative {
       unlink($output_file . '.html');
     }
     return $return;
-  }  
+  }
 
   function JP2($dsid = 'JP2', $label = 'Compressed jp2') {
     try {
@@ -132,6 +132,44 @@ class Derivative {
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative! - $e", 'ERROR');
       unlink($output_file);
+    }
+    return $return;
+  }
+
+  function TN_department($dsid = 'TN', $label = 'Thumbnail', $height = '200', $width = '200') {
+    try {
+      $tn_filename = 'department_tn.png';
+      if (!file_exists($tn_filename)) {
+        $this->log->lwrite("Could not find thumbnail image!", 'ERROR');
+        return FALSE;
+      }
+      $tn_datastream = new NewFedoraDatastream($dsid, 'M', $this->object, $this->fedora_object->repository);
+      $tn_datastream->setContentFromFile($tn_filename);
+      $tn_datastream->label = $label;
+      $tn_datastream->mimetype = 'image/png';
+      $tn_datastream->state = 'A';
+      $this->object->ingestDatastream($tn_datastream);
+    } catch (Exception $e) {
+      $this->log->lwrite("Could not create the $dsid derivative! - $e", 'ERROR');
+    }
+    return $return;
+  }
+
+  function TN_faculty($dsid = 'TN', $label = 'Thumbnail', $height = '200', $width = '200') {
+    try {
+      $tn_filename = 'faculty_tn.png';
+      if (!file_exists($tn_filename)) {
+        $this->log->lwrite("Could not find thumbnail image!", 'ERROR');
+        return FALSE;
+      }
+      $tn_datastream = new NewFedoraDatastream($dsid, 'M', $this->object, $this->fedora_object->repository);
+      $tn_datastream->setContentFromFile($tn_filename);
+      $tn_datastream->label = $label;
+      $tn_datastream->mimetype = 'image/png';
+      $tn_datastream->state = 'A';
+      $this->object->ingestDatastream($tn_datastream);
+    } catch (Exception $e) {
+      $this->log->lwrite("Could not create the $dsid derivative! - $e", 'ERROR');
     }
     return $return;
   }
