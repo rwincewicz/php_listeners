@@ -102,7 +102,6 @@ class Connect {
           foreach ($xml_methods as $xml_method) {
             $methods[] = (string) $xml_method[0];
           }
-          var_dump($methods);
           $datastream = $object->datastream;
           $datastream = (string) $datastream[0];
           $new_datastreams = $object->derivative;
