@@ -30,7 +30,7 @@ class Derivative {
   function OCR($dsid = 'OCR', $label = 'Scanned text', $language = 'eng') {
     try {
       $output_file = $this->temp_file . '_OCR';
-      exec("tesseract $this->temp_file $output_file -l $language", $ocr_output, $return);
+      exec("tesseract $this->temp_file $output_file -l $language -psm 1", $ocr_output, $return);
       $this->log->lwrite("OCR output: " . implode("\n", $ocr_output));
       $ocr_datastream = new NewFedoraDatastream($dsid, 'M', $this->object, $this->fedora_object->repository);
       $ocr_datastream->setContentFromFile($output_file . '.txt');
@@ -49,7 +49,7 @@ class Derivative {
   function HOCR($dsid = 'HOCR', $label = 'HOCR', $language = 'eng') {
     try {
       $output_file = $this->temp_file . '_HOCR';
-      exec("tesseract $this->temp_file $output_file -l $language hocr", $hocr_output, $return);
+      exec("tesseract $this->temp_file $output_file -l $language -psm 1 hocr", $hocr_output, $return);
       $this->log->lwrite("HOCR output: " . implode("\n", $hocr_output));
       $hocr_datastream = new NewFedoraDatastream($dsid, 'M', $this->object, $this->fedora_object->repository);
       $hocr_datastream->setContentFromFile($output_file . '.html');
@@ -68,7 +68,7 @@ class Derivative {
   function ENCODED_OCR($dsid = 'ENCODED_OCR', $label = 'Encoded OCR', $language = 'eng') {
     try {
       $output_file = $this->temp_file . '_HOCR';
-      exec("tesseract $this->temp_file $output_file -l $language hocr", $hocr_output, $return);
+      exec("tesseract $this->temp_file $output_file -l $language -psm 1 hocr", $hocr_output, $return);
       $this->log->lwrite("HOCR output: " . implode("\n", $hocr_output));
       $hocr_datastream = new NewFedoraDatastream("HOCR", 'M', $this->object, $this->fedora_object->repository);
       $hocr_datastream->setContentFromFile($output_file . '.html');
