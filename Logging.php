@@ -22,7 +22,7 @@ class Logging {
         $this->log_file = $path;
     }
     // write message to the log file
-    public function lwrite($message, $level = 'DEBUG') {
+    public function lwrite($message, $type, $pid = NULL, $dsid = NULL, $user = NULL, $level = 'INFO') {
         // if file pointer doesn't exist, then open log file
         if (!$this->fp) {
             $this->lopen();
@@ -31,9 +31,9 @@ class Logging {
         $script_name = pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME);
         // define current time and suppress E_WARNING if using the system TZ settings
         // (don't forget to set the INI setting date.timezone)
-        $time = @date('[d/M/Y:H:i:s]');
+        $time = @date('d/M/Y, H:i:s');
         // write current time, script name and message to the log file
-        fwrite($this->fp, "$time $level ($script_name) $message" . PHP_EOL);
+        fwrite($this->fp, "$time, $level, $type, $pid, $dsid, $user, $message, ($script_name)" . PHP_EOL);
     }
     // close log file (it's always a good idea to close a file when you're done with it)
     public function lclose() {

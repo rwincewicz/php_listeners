@@ -47,13 +47,13 @@ class Connect {
     try {
       $this->con->connect();
     } catch (Exception $e) {
-      $this->log->lwrite("Could not connect to Stomp server - $e", 'ERROR');
+      $this->log->lwrite("Could not connect to Stomp server - $e", 'SERVER', NULL, NULL, NULL, 'ERROR');
     }
     // Subscribe to the queue
     try {
       $this->con->subscribe((string) $channel[0], array('activemq.prefetchSize' => 100));
     } catch (Exception $e) {
-      $this->log->lwrite("Could not subscribe to the channel $channel - $e", 'ERROR');
+      $this->log->lwrite("Could not subscribe to the channel $channel - $e", 'SERVER', NULL, NULL, NULL, 'ERROR');
     }
   }
 
@@ -67,31 +67,29 @@ class Connect {
         sleep(1);
         $message = new Message($this->msg->body);
         $pid = $this->msg->headers['pid'];
-        $this->log->lwrite("Pid: " . $pid);
-        $this->log->lwrite("Method: " . $this->msg->headers['methodName']);
-        $this->log->lwrite("Owner: " . $message->author);
+        $this->log->lwrite("Method: " . $this->msg->headers['methodName'], 'MODIFY_OBJECT', $pid, $message->dsID, $message->author);
         try {
           if (fedora_object_exists($this->fedora_url, $this->user, $pid) === FALSE) {
-            $this->log->lwrite("Could not find object $pid", 'ERROR');
+            $this->log->lwrite("Could not find object", 'DELETED_OBJECT', $pid, NULL, $message->author, 'ERROR');
             $this->con->ack($this->msg);
             unset($this->msg);
             return;
           }
           $fedora_object = new ListenerObject($this->user, $this->fedora_url, $pid);
         } catch (Exception $e) {
-          $this->log->lwrite("An error occurred creating the fedora object - $e", 'ERROR');
+          $this->log->lwrite("An error occurred creating the fedora object", 'FAIL_OBJECT', $pid, NULL, $message->author, 'ERROR');
         }
-        $this->log->lwrite("Models: " . implode(', ', $fedora_object->object->models));
+//        $this->log->lwrite("Models: " . implode(', ', $fedora_object->object->models));
 
         $properties = get_object_vars($message);
         $object_namespace_array = explode(':', $pid);
         $object_namespace = $object_namespace_array[0];
 
-        if (array_key_exists('dsID', $properties)) {
-          $this->log->lwrite("DSID: " . $message->dsID);
-          $this->log->lwrite("Label: " . $message->dsLabel);
-//          $this->log->lwrite("Control group: " . $message->controlGroup);
-        }
+//        if (array_key_exists('dsID', $properties)) {
+//          $this->log->lwrite("DSID: " . $message->dsID);
+//          $this->log->lwrite("Label: " . $message->dsLabel);
+////          $this->log->lwrite("Control group: " . $message->controlGroup);
+//        }
         $objects = $this->config_xml->xpath('//object');
 
         foreach ($objects as $object) {
@@ -114,7 +112,7 @@ class Connect {
                   if (in_array($this->msg->headers['methodName'], $methods)) {
                     $derivative = new Derivative($fedora_object, $datastream, $extension, $this->log);
                     foreach ($new_datastreams as $new_datastream) {
-                      $this->log->lwrite('Adding datastream ' . $new_datastream->dsid . ' with label ' . $new_datastream->label . ' using function ' . $new_datastream->function);
+                      $this->log->lwrite("Adding datastream '$new_datastream->dsid' with label '$new_datastream->label' using function '$new_datastream->function'", 'START_DATASTREAM', $pid, $new_datastream->dsid, $message->author);
                       $function = (string) $new_datastream->function;
                       $derivative->{$function}((string) $new_datastream->dsid, (string) $new_datastream->label);
                     }
@@ -138,9 +136,9 @@ class Connect {
         $this->con->ack($this->msg);
         unset($this->msg);
       }
-      $this->log->lwrite("Child memory usage: " . memory_get_usage());
-      $this->log->lwrite("Garbage collection enabled: " . gc_enabled()); // true
-      $this->log->lwrite("Garbage collected: " . gc_collect_cycles()); // # of elements cleaned up
+//      $this->log->lwrite("Child memory usage: " . memory_get_usage());
+//      $this->log->lwrite("Garbage collection enabled: " . gc_enabled()); // true
+//      $this->log->lwrite("Garbage collected: " . gc_collect_cycles()); // # of elements cleaned up
       // Disconnect
       $this->con->disconnect();
       // Close log file
