@@ -16,7 +16,7 @@ class Derivative {
     $this->object = $fedora_object->object;
     $this->pid = $fedora_object->object->id;
     $this->incoming_dsid = $incoming_dsid;
-    $this->incoming_datastream = new FedoraDatastream($this->incoming_dsid, $this->fedora_object, $this->fedora_object->repository);
+    $this->incoming_datastream = new FedoraDatastream($this->incoming_dsid, $this->fedora_object->object, $this->fedora_object->repository);
     $this->mimetype = $this->incoming_datastream->mimetype;
     $this->extension = $extension;
     if ($this->incoming_dsid != NULL) {
