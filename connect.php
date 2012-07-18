@@ -67,6 +67,9 @@ class Connect {
         sleep(1);
         $message = new Message($this->msg->body);
         $pid = $this->msg->headers['pid'];
+        if (!$message->dsID) {
+          $message->dsID = NULL;
+        }
         $this->log->lwrite("Method: " . $this->msg->headers['methodName'], 'MODIFY_OBJECT', $pid, $message->dsID, $message->author);
         try {
           if (fedora_object_exists($this->fedora_url, $this->user, $pid) === FALSE) {
