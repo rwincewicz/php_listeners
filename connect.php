@@ -64,7 +64,7 @@ class Connect {
 
       // do what you want with the message
       if ($this->msg != NULL) {
-        sleep(1);
+//        sleep(1);
         $message = new Message($this->msg->body);
         $pid = $this->msg->headers['pid'];
         if (!$message->dsID) {
