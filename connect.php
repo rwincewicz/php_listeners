@@ -79,17 +79,10 @@ class Connect {
         } catch (Exception $e) {
           $this->log->lwrite("An error occurred creating the fedora object", 'FAIL_OBJECT', $pid, NULL, $message->author, 'ERROR');
         }
-//        $this->log->lwrite("Models: " . implode(', ', $fedora_object->object->models));
 
         $properties = get_object_vars($message);
         $object_namespace_array = explode(':', $pid);
         $object_namespace = $object_namespace_array[0];
-
-//        if (array_key_exists('dsID', $properties)) {
-//          $this->log->lwrite("DSID: " . $message->dsID);
-//          $this->log->lwrite("Label: " . $message->dsLabel);
-////          $this->log->lwrite("Control group: " . $message->controlGroup);
-//        }
         $objects = $this->config_xml->xpath('//object');
 
         foreach ($objects as $object) {
@@ -111,7 +104,7 @@ class Connect {
                 if ((string) $namespace == (string) $object_namespace) {
                   if (in_array($this->msg->headers['methodName'], $methods)) {
                     $derivative = new Derivative($fedora_object, $datastream, $extension, $this->log);
-                    foreach ($new_datastreams as $new_datastream) {
+                    foreach ($new_datastreams as $new_datastream) {   
                       $this->log->lwrite("Adding datastream '$new_datastream->dsid' with label '$new_datastream->label' using function '$new_datastream->function'", 'START_DATASTREAM', $pid, $new_datastream->dsid, $message->author);
                       $function = (string) $new_datastream->function;
                       $derivative->{$function}((string) $new_datastream->dsid, (string) $new_datastream->label);
@@ -136,9 +129,6 @@ class Connect {
         $this->con->ack($this->msg);
         unset($this->msg);
       }
-//      $this->log->lwrite("Child memory usage: " . memory_get_usage());
-//      $this->log->lwrite("Garbage collection enabled: " . gc_enabled()); // true
-//      $this->log->lwrite("Garbage collected: " . gc_collect_cycles()); // # of elements cleaned up
       // Disconnect
       $this->con->disconnect();
       // Close log file

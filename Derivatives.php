@@ -7,7 +7,7 @@
 
 class Derivative {
 
-  function __construct($fedora_object, $dsid, $extension = NULL, $log) {
+  function __construct($fedora_object, $incoming_dsid, $extension = NULL, $log) {
     include_once 'message.php';
     include_once 'fedoraConnection.php';
 
@@ -15,10 +15,12 @@ class Derivative {
     $this->fedora_object = $fedora_object;
     $this->object = $fedora_object->object;
     $this->pid = $fedora_object->object->id;
-    $this->dsid = $dsid;
+    $this->incoming_dsid = $incoming_dsid;
+    $this->incoming_datastream = new FedoraDatastream($this->incoming_dsid, $this->fedora_object, $this->fedora_object->repository);
+    $this->mimetype = $this->incoming_datastream->mimetype;
     $this->extension = $extension;
-    if ($this->dsid != NULL) {
-      $this->temp_file = $fedora_object->saveDatastream($dsid, $extension);
+    if ($this->incoming_dsid != NULL) {
+      $this->temp_file = $fedora_object->saveDatastream($incomingdsid, $extension);
     }
     $extension_array = explode('.', $this->temp_file);
     $extension = $extension_array[1];
@@ -214,6 +216,30 @@ class Derivative {
       $techmd_datastream->mimetype = 'text/xml';
       $techmd_datastream->state = 'A';
       $this->object->ingestDatastream($techmd_datastream);
+      unlink($output_file);
+    } catch (Exception $e) {
+      $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
+      unlink($output_file);
+    }
+    return $return;
+  }
+
+  function Scholar_PDFA($dsid = 'PDF', $label = 'PDF') {
+    $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, $dsid);
+    try {
+      $output_file = $this->temp_file . '_Scholar_PDFA.xml';
+      if ($this->mimetype == 'application/pdf') {
+        exec("gs -dPDFA -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sOutputFile=$output_file $this->temp_file", $pdfa_output, $return);
+      }
+      else {
+        exec("java -jar /opt/jodconverter-core-3.0-beta-4/lib/jodconverter-core-3.0-beta-4.jar $this->temp_file $output_file", $pdfa_output, $return);
+      }
+      $pdfa_datastream = new NewFedoraDatastream($dsid, 'M', $this->object, $this->fedora_object->repository);
+      $pdfa_datastream->setContentFromFile($output_file);
+      $pdfa_datastream->label = $label;
+      $pdfa_datastream->mimetype = 'application/pdf';
+      $pdfa_datastream->state = 'A';
+      $this->object->ingestDatastream($pdfa_datastream);
       unlink($output_file);
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
