@@ -18,9 +18,13 @@ switch ($_SERVER['REQUEST_METHOD']) {
         $pid_array = explode('=', $param);
         $pid = $pid_array[1];
       }
+      if (preg_match("/^action.*/", $param)) {
+        $action_array = explode('=', $param);
+        $action = $action_array[1];
+      }      
     }
-    switch ($request_uri[0]) {
-      case '/list':
+    switch ($action) {
+      case 'list':
         $lines = count(file('../listener.log'));
         if ($lines > $no_of_rows) {
           $content = trim(file_get_contents('../listener.log'));
@@ -40,7 +44,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
           print json_encode($content);
         }
         break;
-      case '/object':
+      case 'object':
         $returned_lines = array();
         $content = trim(file_get_contents('../listener.log'));
         $content_array = explode("\n", $content);
