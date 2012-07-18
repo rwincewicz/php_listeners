@@ -43,6 +43,7 @@ class Derivative {
       $ocr_datastream->state = 'A';
       $this->object->ingestDatastream($ocr_datastream);
       unlink($output_file . '.txt');
+      $this->log->lwrite('Finished processing', 'COMPLETE_DATASTREAM', $this->pid, $dsid);
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
       unlink($output_file . '.txt');
@@ -63,6 +64,7 @@ class Derivative {
       $hocr_datastream->state = 'A';
       $this->object->ingestDatastream($hocr_datastream);
       unlink($output_file . '.html');
+      $this->log->lwrite('Finished processing', 'COMPLETE_DATASTREAM', $this->pid, $dsid);      
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
       unlink($output_file . '.html');
@@ -97,6 +99,7 @@ class Derivative {
       $encoded_datastream->state = 'A';
       $this->object->ingestDatastream($encoded_datastream);
       unlink($output_file . '.html');
+      $this->log->lwrite('Finished processing', 'COMPLETE_DATASTREAM', $this->pid, $dsid);
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
       unlink($output_file . '.html');
@@ -117,6 +120,7 @@ class Derivative {
       $jp2_datastream->state = 'A';
       $this->object->ingestDatastream($jp2_datastream);
       unlink($output_file);
+      $this->log->lwrite('Finished processing', 'COMPLETE_DATASTREAM', $this->pid, $dsid);
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
       unlink($output_file);
@@ -137,6 +141,7 @@ class Derivative {
       $tn_datastream->state = 'A';
       $this->object->ingestDatastream($tn_datastream);
       unlink($output_file);
+      $this->log->lwrite('Finished processing', 'COMPLETE_DATASTREAM', $this->pid, $dsid);
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
       unlink($output_file);
@@ -158,6 +163,7 @@ class Derivative {
       $tn_datastream->mimetype = 'image/png';
       $tn_datastream->state = 'A';
       $this->object->ingestDatastream($tn_datastream);
+      $this->log->lwrite('Finished processing', 'COMPLETE_DATASTREAM', $this->pid, $dsid);
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
     }
@@ -178,6 +184,7 @@ class Derivative {
       $tn_datastream->mimetype = 'image/png';
       $tn_datastream->state = 'A';
       $this->object->ingestDatastream($tn_datastream);
+      $this->log->lwrite('Finished processing', 'COMPLETE_DATASTREAM', $this->pid, $dsid);
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
     }
@@ -197,6 +204,7 @@ class Derivative {
       $jpeg_datastream->state = 'A';
       $this->object->ingestDatastream($jpeg_datastream);
       unlink($output_file);
+      $this->log->lwrite('Finished processing', 'COMPLETE_DATASTREAM', $this->pid, $dsid);
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
       unlink($output_file);
@@ -217,6 +225,7 @@ class Derivative {
       $techmd_datastream->state = 'A';
       $this->object->ingestDatastream($techmd_datastream);
       unlink($output_file);
+      $this->log->lwrite('Finished processing', 'COMPLETE_DATASTREAM', $this->pid, $dsid);
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
       unlink($output_file);
@@ -242,6 +251,7 @@ class Derivative {
         $pdfa_datastream->state = 'A';
         $this->object->ingestDatastream($pdfa_datastream);
         unlink($output_file);
+        $this->log->lwrite('Finished processing', 'COMPLETE_DATASTREAM', $this->pid, $dsid);
       } catch (Exception $e) {
         $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
         unlink($output_file);
