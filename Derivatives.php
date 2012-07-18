@@ -7,7 +7,7 @@
 
 class Derivative {
 
-  function __construct($fedora_object, $incoming_dsid, $extension = NULL, $log) {
+  function __construct($fedora_object, $incoming_dsid, $extension = NULL, $log, $created_datastream) {
     include_once 'message.php';
     include_once 'fedoraConnection.php';
 
@@ -15,6 +15,7 @@ class Derivative {
     $this->fedora_object = $fedora_object;
     $this->object = $fedora_object->object;
     $this->pid = $fedora_object->object->id;
+    $this->created_datastream = $created_datastream;
     $this->incoming_dsid = $incoming_dsid;
     $this->incoming_datastream = new FedoraDatastream($this->incoming_dsid, $this->fedora_object->object, $this->fedora_object->repository);
     $this->mimetype = $this->incoming_datastream->mimetype;
@@ -234,8 +235,8 @@ class Derivative {
   }
 
   function Scholar_PDFA($dsid = 'PDF', $label = 'PDF') {
-    if ($this->incoming_dsid == 'OBJ') {
-      $this->log->lwrite('Starting processing because the ' . $this->incoming_dsid . ' datastream was added', 'PROCESS_DATASTREAM', $this->pid, $dsid);
+    if ($this->created_datastream == 'OBJ') {
+      $this->log->lwrite('Starting processing because the ' . $this->created_datastream . ' datastream was added', 'PROCESS_DATASTREAM', $this->pid, $dsid);
       try {
         $output_file = $this->temp_file . '_Scholar_PDFA.xml';
         if ($this->mimetype == 'application/pdf') {
