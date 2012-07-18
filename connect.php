@@ -98,6 +98,7 @@ class Connect {
           }
           $datastream = $object->datastream;
           $datastream = (string) $datastream[0];
+          $trigger_datastreams = $object->trigger_datastream;
           $new_datastreams = $object->derivative;
           $extension = $object->extension;
           $extension = (string) $extension[0];
@@ -108,11 +109,13 @@ class Connect {
               foreach ($namespaces as $namespace) {
                 if ((string) $namespace == (string) $object_namespace) {
                   if (in_array($this->msg->headers['methodName'], $methods)) {
-                    $derivative = new Derivative($fedora_object, $datastream, $extension, $this->log);
-                    foreach ($new_datastreams as $new_datastream) {   
-                      $this->log->lwrite("Adding datastream '$new_datastream->dsid' with label '$new_datastream->label' using function '$new_datastream->function'", 'START_DATASTREAM', $pid, $new_datastream->dsid, $message->author);
-                      $function = (string) $new_datastream->function;
-                      $derivative->{$function}((string) $new_datastream->dsid, (string) $new_datastream->label);
+                    if (in_array($message->dsID, $trigger_datastreams)) {
+                      $derivative = new Derivative($fedora_object, $datastream, $extension, $this->log);
+                      foreach ($new_datastreams as $new_datastream) {
+                        $this->log->lwrite("Adding datastream '$new_datastream->dsid' with label '$new_datastream->label' using function '$new_datastream->function'", 'START_DATASTREAM', $pid, $new_datastream->dsid, $message->author);
+                        $function = (string) $new_datastream->function;
+                        $derivative->{$function}((string) $new_datastream->dsid, (string) $new_datastream->label);
+                      }
                     }
                   }
                 }
