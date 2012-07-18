@@ -226,7 +226,7 @@ class Derivative {
 
   function Scholar_PDFA($dsid = 'PDF', $label = 'PDF') {
     if ($this->incoming_dsid == 'OBJ') {
-      $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, $dsid);
+      $this->log->lwrite('Starting processing because the ' . $this->incoming_dsid . ' datastream was added', 'PROCESS_DATASTREAM', $this->pid, $dsid);
       try {
         $output_file = $this->temp_file . '_Scholar_PDFA.xml';
         if ($this->mimetype == 'application/pdf') {
