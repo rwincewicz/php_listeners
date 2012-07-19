@@ -178,6 +178,8 @@ class Derivative {
     if ($this->created_datastream == 'OBJ') {
       $this->log->lwrite('Starting processing because the ' . $this->created_datastream . ' datastream was added', 'PROCESS_DATASTREAM', $this->pid, $dsid);
       try {
+        $ds = $this->object->datastream('OBJ');
+        $mimetype = $ds->mimetype;
         $output_file = $this->temp_file . '_Scholar_PDFA.pdf';
         if ($this->mimetype == 'application/pdf') {
           exec("gs -dPDFA -dBATCH -dNOPAUSE -dUseCIEColor -sProcessColorModel=DeviceCMYK -sDEVICE=pdfwrite -sPDFACompatibilityPolicy=1 -sOutputFile=$output_file $this->temp_file", $pdfa_output, $return);
@@ -188,7 +190,7 @@ class Derivative {
         }
         $this->add_derivative($dsid, $label, $output_file, 'application/pdf');
       } catch (Exception $e) {
-        $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
+        $this->log->lwrite("Could not create the $dsid derivative! - Mimetype: $mimetype", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
         unlink($output_file);
       }
       return $return;
