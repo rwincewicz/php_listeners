@@ -21,7 +21,7 @@ class Derivative {
     $this->mimetype = $this->incoming_datastream->mimetype;
     $this->extension = $extension;
     if ($this->incoming_dsid != NULL) {
-      $this->temp_file = $fedora_object->saveDatastream($incomingdsid, $extension);
+      $this->temp_file = $fedora_object->saveDatastream($incoming_dsid, $extension);
     }
     $extension_array = explode('.', $this->temp_file);
     $extension = $extension_array[1];
