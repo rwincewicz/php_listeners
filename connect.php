@@ -103,7 +103,7 @@ class Connect {
           $extension = (string) $extension[0];
           foreach ($content_models as $content_model) {
 //            $this->log->lwrite('Config content model: ' . $content_model);
-            $this->log->lwrite('Object content model: ' . implode(', ', $fedora_object->object->models));
+//            $this->log->lwrite('Object content model: ' . implode(', ', $fedora_object->object->models));
             if (in_array($content_model, $fedora_object->object->models)) {
               foreach ($namespaces as $namespace) {
                 if ((string) $namespace == (string) $object_namespace) {
