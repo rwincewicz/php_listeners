@@ -180,6 +180,8 @@ class Derivative {
       try {
         $ds = $this->object->getDatastream('OBJ');
         $mimetype = $ds->mimetype;
+        $extension = system_mime_type_extension($mimetype);
+        $this->log->lwrite("Mimetype: $mimetype \n Extension: $extension");
         $output_file = $this->temp_file . '_Scholar_PDFA.pdf';
         if ($this->mimetype == 'application/pdf') {
           exec("gs -dPDFA -dBATCH -dNOPAUSE -dUseCIEColor -sProcessColorModel=DeviceCMYK -sDEVICE=pdfwrite -sPDFACompatibilityPolicy=1 -sOutputFile=$output_file $this->temp_file", $pdfa_output, $return);
