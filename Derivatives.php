@@ -36,7 +36,7 @@ class Derivative {
     try {
       $output_file = $this->temp_file . '_OCR';
       exec("tesseract $this->temp_file $output_file -l $language -psm 1", $ocr_output, $return);
-      $this->add_derivative($dsid, $output_file, 'text/plain');
+      $this->add_derivative($dsid, $label, $output_file, 'text/plain');
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
       unlink($output_file . '.txt');
@@ -49,7 +49,7 @@ class Derivative {
     try {
       $output_file = $this->temp_file . '_HOCR';
       exec("tesseract $this->temp_file $output_file -l $language -psm 1 hocr", $hocr_output, $return);
-      $this->add_derivative($dsid, $output_file, 'text/html');
+      $this->add_derivative($dsid, $label, $output_file, 'text/html');
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
       unlink($output_file . '.html');
@@ -97,7 +97,7 @@ class Derivative {
     try {
       $output_file = $this->temp_file . '_JP2.jp2';
       exec('kdu_compress -i ' . $this->temp_file . ' -o ' . $output_file . ' -rate 0.5 Clayers=1 Clevels=7 Cprecincts=\{256,256\},\{256,256\},\{256,256\},\{128,128\},\{128,128\},\{64,64\},\{64,64\},\{32,32\},\{16,16\} Corder=RPCL ORGgen_plt=yes ORGtparts=R Cblk=\{32,32\} Cuse_sop=yes', $jp2_output, $return);
-      $this->add_derivative($dsid, $output_file, 'image/jp2');
+      $this->add_derivative($dsid, $label, $output_file, 'image/jp2');
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
       unlink($output_file);
@@ -110,7 +110,7 @@ class Derivative {
     try {
       $output_file = $this->temp_file . '_TN.jpg';
       exec("convert -thumbnail " . $height . "x" . $width . " $this->temp_file $output_file", $tn_output, $return);
-      $this->add_derivative($dsid, $output_file, 'image/jpg');
+      $this->add_derivative($dsid, $label, $output_file, 'image/jpg');
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
       unlink($output_file);
@@ -126,7 +126,7 @@ class Derivative {
         $this->log->lwrite("Could not find thumbnail image!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
         return FALSE;
       }
-      $this->add_derivative($dsid, $output_file, 'image/png');
+      $this->add_derivative($dsid, $label, $output_file, 'image/png');
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
     }
@@ -141,7 +141,7 @@ class Derivative {
         $this->log->lwrite("Could not find thumbnail image!", 'ERROR');
         return FALSE;
       }
-      $this->add_derivative($dsid, $output_file, 'image/png');
+      $this->add_derivative($dsid, $label, $output_file, 'image/png');
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
     }
@@ -153,7 +153,7 @@ class Derivative {
     try {
       $output_file = $this->temp_file . '_JPG.jpg';
       exec("convert -resize $resize $this->temp_file $output_file", $jpg_output, $return);
-      $this->add_derivative($dsid, $output_file, 'image/jpg');
+      $this->add_derivative($dsid, $label, $output_file, 'image/jpg');
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
       unlink($output_file);
@@ -166,7 +166,7 @@ class Derivative {
     try {
       $output_file = $this->temp_file . '_TECHMD.xml';
       exec("/opt/fits/fits.sh -i $this->temp_file -o $output_file", $techmd_output, $return);
-      $this->add_derivative($dsid, $output_file, 'text/xml');
+      $this->add_derivative($dsid, $label, $output_file, 'text/xml');
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
       unlink($output_file);
@@ -186,7 +186,7 @@ class Derivative {
           $command = "java -jar /opt/jodconverter-core-3.0-beta-4/lib/jodconverter-core-3.0-beta-4.jar $this->temp_file $output_file";
           exec($command, $pdfa_output, $return);
         }
-        $this->add_derivative($dsid, $output_file, 'application/pdf');
+        $this->add_derivative($dsid, $label, $output_file, 'application/pdf');
       } catch (Exception $e) {
         $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
         unlink($output_file);
@@ -199,7 +199,7 @@ class Derivative {
     $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, $dsid);
     try {
       $output_file = 'document-embargo.xml';
-      $this->add_derivative($dsid, $output_file, 'text/xml');
+      $this->add_derivative($dsid, $label, $output_file, 'text/xml');
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
       unlink($output_file);
@@ -207,7 +207,7 @@ class Derivative {
     return $return;    
   }
 
-  private function add_derivative($dsid, $output_file, $mimetype) {
+  private function add_derivative($dsid, $label, $output_file, $mimetype) {
     $datastream = new NewFedoraDatastream($dsid, 'M', $this->object, $this->fedora_object->repository);
     $datastream->setContentFromFile($output_file);
     $datastream->label = $label;
