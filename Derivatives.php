@@ -254,7 +254,7 @@ class Derivative {
         unlink($output_file);
         $this->log->lwrite('Finished processing', 'COMPLETE_DATASTREAM', $this->pid, $dsid);
       } catch (Exception $e) {
-        $this->log->lwrite("Could not create the $dsid derivative! - $pdfa_output - $e", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
+        $this->log->lwrite("Could not create the $dsid derivative! - " . implode("\n", $pdfa_output) . " - $e", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
         unlink($output_file);
       }
       return $return;
