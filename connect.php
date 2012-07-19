@@ -18,8 +18,6 @@ class Connect {
     include_once 'connect.php';
     include_once 'Derivatives.php';
     include_once 'Logging.php';
-
-    set_time_limit(5);
     
     // Load config file
     $config_file = file_get_contents('config.xml');
