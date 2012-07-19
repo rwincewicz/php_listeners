@@ -126,11 +126,11 @@ class Derivative {
         $this->log->lwrite("Could not find thumbnail image!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
         return FALSE;
       }
-      $this->add_derivative($dsid, $label, $output_file, 'image/png');
+      $this->add_derivative($dsid, $label, $tn_filename, 'image/png');
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
     }
-    return $return;
+    return TRUE;
   }
 
   function TN_faculty($dsid = 'TN', $label = 'Thumbnail', $height = '200', $width = '200') {
@@ -141,11 +141,11 @@ class Derivative {
         $this->log->lwrite("Could not find thumbnail image!", 'ERROR');
         return FALSE;
       }
-      $this->add_derivative($dsid, $label, $output_file, 'image/png');
+      $this->add_derivative($dsid, $label, $tn_filename, 'image/png');
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
     }
-    return $return;
+    return TRUE;
   }
 
   function JPG($dsid = 'JPEG', $label = 'JPEG image', $resize = '800') {
@@ -178,10 +178,6 @@ class Derivative {
     if ($this->created_datastream == 'OBJ') {
       $this->log->lwrite('Starting processing because the ' . $this->created_datastream . ' datastream was added', 'PROCESS_DATASTREAM', $this->pid, $dsid);
       try {
-        $ds = $this->object->getDatastream('OBJ');
-        $mimetype = $ds->mimetype;
-        $extension = system_mime_type_extension($mimetype);
-        $this->log->lwrite("Mimetype: $mimetype \n Extension: $extension");
         $output_file = $this->temp_file . '_Scholar_PDFA.pdf';
         if ($this->mimetype == 'application/pdf') {
           exec("gs -dPDFA -dBATCH -dNOPAUSE -dUseCIEColor -sProcessColorModel=DeviceCMYK -sDEVICE=pdfwrite -sPDFACompatibilityPolicy=1 -sOutputFile=$output_file $this->temp_file", $pdfa_output, $return);
@@ -192,7 +188,7 @@ class Derivative {
         }
         $this->add_derivative($dsid, $label, $output_file, 'application/pdf');
       } catch (Exception $e) {
-        $this->log->lwrite("Could not create the $dsid derivative! - Mimetype: $mimetype", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
+        $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
         unlink($output_file);
       }
       return $return;
