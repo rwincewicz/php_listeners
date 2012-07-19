@@ -65,7 +65,7 @@ class Derivative {
       $hocr_datastream->state = 'A';
       $this->object->ingestDatastream($hocr_datastream);
       unlink($output_file . '.html');
-      $this->log->lwrite('Finished processing', 'COMPLETE_DATASTREAM', $this->pid, $dsid);      
+      $this->log->lwrite('Finished processing', 'COMPLETE_DATASTREAM', $this->pid, $dsid);
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
       unlink($output_file . '.html');
@@ -246,20 +246,28 @@ class Derivative {
           $command = "java -jar /opt/jodconverter-core-3.0-beta-4/lib/jodconverter-core-3.0-beta-4.jar $this->temp_file $output_file";
           exec($command, $pdfa_output, $return);
         }
-        $pdfa_datastream = new NewFedoraDatastream($dsid, 'M', $this->object, $this->fedora_object->repository);
-        $pdfa_datastream->setContentFromFile($output_file);
-        $pdfa_datastream->label = $label;
-        $pdfa_datastream->mimetype = 'application/pdf';
-        $pdfa_datastream->state = 'A';
-        $this->object->ingestDatastream($pdfa_datastream);
-        unlink($output_file);
-        $this->log->lwrite('Finished processing', 'COMPLETE_DATASTREAM', $this->pid, $dsid);
+        $this->add_derivative($dsid, $output_file, 'application/pdf');
       } catch (Exception $e) {
         $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
         unlink($output_file);
       }
       return $return;
     }
+  }
+
+  function Scholar_Policy($dsid = 'POLICY', $label = "XACML policy") {
+    
+  }
+
+  private function add_derivative($dsid, $output_file, $mimetype) {
+    $pdfa_datastream = new NewFedoraDatastream($dsid, 'M', $this->object, $this->fedora_object->repository);
+    $pdfa_datastream->setContentFromFile($output_file);
+    $pdfa_datastream->label = $label;
+    $pdfa_datastream->mimetype = $mimetype;
+    $pdfa_datastream->state = 'A';
+    $this->object->ingestDatastream($pdfa_datastream);
+    unlink($output_file);
+    $this->log->lwrite('Finished processing', 'COMPLETE_DATASTREAM', $this->pid, $dsid);
   }
 
 }
