@@ -178,7 +178,7 @@ class Derivative {
     if ($this->created_datastream == 'OBJ') {
       $this->log->lwrite('Starting processing because the ' . $this->created_datastream . ' datastream was added', 'PROCESS_DATASTREAM', $this->pid, $dsid);
       try {
-        $ds = $this->object->datastream('OBJ');
+        $ds = $this->object->getDatastream('OBJ');
         $mimetype = $ds->mimetype;
         $output_file = $this->temp_file . '_Scholar_PDFA.pdf';
         if ($this->mimetype == 'application/pdf') {
