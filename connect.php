@@ -19,6 +19,8 @@ class Connect {
     include_once 'Derivatives.php';
     include_once 'Logging.php';
 
+    set_time_limit(5);
+    
     // Load config file
     $config_file = file_get_contents('config.xml');
     $this->config_xml = new SimpleXMLElement($config_file);
@@ -58,7 +60,7 @@ class Connect {
   }
 
   function listen() {
-
+    
     // Receive a message from the queue
     if ($this->msg = $this->con->readFrame()) {
 
@@ -82,7 +84,6 @@ class Connect {
         } catch (Exception $e) {
           $this->log->lwrite("An error occurred creating the fedora object", 'FAIL_OBJECT', $pid, NULL, $message->author, 'ERROR');
         }
-
         $properties = get_object_vars($message);
         $object_namespace_array = explode(':', $pid);
         $object_namespace = $object_namespace_array[0];
@@ -129,18 +130,19 @@ class Connect {
           unset($new_datastream);
           unset($derivative);
         }
-
+        
         // Mark the message as received in the queue
         $this->con->ack($this->msg);
         unset($this->msg);
       }
+      
       // Disconnect
       $this->con->disconnect();
+      
       // Close log file
       $this->log->lclose();
     }
   }
-
 }
 
 ?>
