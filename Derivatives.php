@@ -240,7 +240,7 @@ class Derivative {
       try {
         $output_file = $this->temp_file . '_Scholar_PDFA.pdf';
         if ($this->mimetype == 'application/pdf') {
-          exec("gs -dPDFA -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sOutputFile=$output_file $this->temp_file", $pdfa_output, $return);
+          exec("gs -dPDFA -dBATCH -dNOPAUSE -dUseCIEColor -sProcessColorModel=DeviceCMYK -sDEVICE=pdfwrite -sPDFACompatibilityPolicy=1 -sOutputFile=$output_file $this->temp_file", $pdfa_output, $return);
         }
         else {
           $command = "java -jar /opt/jodconverter-core-3.0-beta-4/lib/jodconverter-core-3.0-beta-4.jar $this->temp_file $output_file";
@@ -252,11 +252,11 @@ class Derivative {
         $pdfa_datastream->mimetype = 'application/pdf';
         $pdfa_datastream->state = 'A';
         $this->object->ingestDatastream($pdfa_datastream);
-//        unlink($output_file);
+        unlink($output_file);
         $this->log->lwrite('Finished processing', 'COMPLETE_DATASTREAM', $this->pid, $dsid);
       } catch (Exception $e) {
-        $this->log->lwrite("Could not create the $dsid derivative! - Command: $command \n Incoming DSID: $this->incoming_dsid \n Temp file: $this->temp_file \n Message: " . implode("\n", $pdfa_output) . "\n Errror:  $e", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
-//        unlink($output_file);
+        $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
+        unlink($output_file);
       }
       return $return;
     }
