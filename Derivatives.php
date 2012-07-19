@@ -36,15 +36,7 @@ class Derivative {
     try {
       $output_file = $this->temp_file . '_OCR';
       exec("tesseract $this->temp_file $output_file -l $language -psm 1", $ocr_output, $return);
-//      $this->log->lwrite("OCR output: " . implode("\n", $ocr_output));
-      $ocr_datastream = new NewFedoraDatastream($dsid, 'M', $this->object, $this->fedora_object->repository);
-      $ocr_datastream->setContentFromFile($output_file . '.txt');
-      $ocr_datastream->label = $label;
-      $ocr_datastream->mimetype = 'text/plain';
-      $ocr_datastream->state = 'A';
-      $this->object->ingestDatastream($ocr_datastream);
-      unlink($output_file . '.txt');
-      $this->log->lwrite('Finished processing', 'COMPLETE_DATASTREAM', $this->pid, $dsid);
+      $this->add_derivative($dsid, $output_file, 'text/plain');
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
       unlink($output_file . '.txt');
@@ -57,15 +49,7 @@ class Derivative {
     try {
       $output_file = $this->temp_file . '_HOCR';
       exec("tesseract $this->temp_file $output_file -l $language -psm 1 hocr", $hocr_output, $return);
-//      $this->log->lwrite("HOCR output: " . implode("\n", $hocr_output));
-      $hocr_datastream = new NewFedoraDatastream($dsid, 'M', $this->object, $this->fedora_object->repository);
-      $hocr_datastream->setContentFromFile($output_file . '.html');
-      $hocr_datastream->label = $label;
-      $hocr_datastream->mimetype = 'text/html';
-      $hocr_datastream->state = 'A';
-      $this->object->ingestDatastream($hocr_datastream);
-      unlink($output_file . '.html');
-      $this->log->lwrite('Finished processing', 'COMPLETE_DATASTREAM', $this->pid, $dsid);
+      $this->add_derivative($dsid, $output_file, 'text/html');
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
       unlink($output_file . '.html');
@@ -113,15 +97,7 @@ class Derivative {
     try {
       $output_file = $this->temp_file . '_JP2.jp2';
       exec('kdu_compress -i ' . $this->temp_file . ' -o ' . $output_file . ' -rate 0.5 Clayers=1 Clevels=7 Cprecincts=\{256,256\},\{256,256\},\{256,256\},\{128,128\},\{128,128\},\{64,64\},\{64,64\},\{32,32\},\{16,16\} Corder=RPCL ORGgen_plt=yes ORGtparts=R Cblk=\{32,32\} Cuse_sop=yes', $jp2_output, $return);
-//      $this->log->lwrite("JP2 output: " . implode("\n", $jp2_output));
-      $jp2_datastream = new NewFedoraDatastream($dsid, 'M', $this->object, $this->fedora_object->repository);
-      $jp2_datastream->setContentFromFile($output_file);
-      $jp2_datastream->label = $label;
-      $jp2_datastream->mimetype = 'image/jp2';
-      $jp2_datastream->state = 'A';
-      $this->object->ingestDatastream($jp2_datastream);
-      unlink($output_file);
-      $this->log->lwrite('Finished processing', 'COMPLETE_DATASTREAM', $this->pid, $dsid);
+      $this->add_derivative($dsid, $output_file, 'image/jp2');
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
       unlink($output_file);
@@ -134,15 +110,7 @@ class Derivative {
     try {
       $output_file = $this->temp_file . '_TN.jpg';
       exec("convert -thumbnail " . $height . "x" . $width . " $this->temp_file $output_file", $tn_output, $return);
-//      $this->log->lwrite("TN output: " . implode("\n", $tn_output));
-      $tn_datastream = new NewFedoraDatastream($dsid, 'M', $this->object, $this->fedora_object->repository);
-      $tn_datastream->setContentFromFile($output_file);
-      $tn_datastream->label = $label;
-      $tn_datastream->mimetype = 'image/jpg';
-      $tn_datastream->state = 'A';
-      $this->object->ingestDatastream($tn_datastream);
-      unlink($output_file);
-      $this->log->lwrite('Finished processing', 'COMPLETE_DATASTREAM', $this->pid, $dsid);
+      $this->add_derivative($dsid, $output_file, 'image/jpg');
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
       unlink($output_file);
@@ -158,13 +126,7 @@ class Derivative {
         $this->log->lwrite("Could not find thumbnail image!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
         return FALSE;
       }
-      $tn_datastream = new NewFedoraDatastream($dsid, 'M', $this->object, $this->fedora_object->repository);
-      $tn_datastream->setContentFromFile($tn_filename);
-      $tn_datastream->label = $label;
-      $tn_datastream->mimetype = 'image/png';
-      $tn_datastream->state = 'A';
-      $this->object->ingestDatastream($tn_datastream);
-      $this->log->lwrite('Finished processing', 'COMPLETE_DATASTREAM', $this->pid, $dsid);
+      $this->add_derivative($dsid, $output_file, 'image/png');
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
     }
@@ -179,13 +141,7 @@ class Derivative {
         $this->log->lwrite("Could not find thumbnail image!", 'ERROR');
         return FALSE;
       }
-      $tn_datastream = new NewFedoraDatastream($dsid, 'M', $this->object, $this->fedora_object->repository);
-      $tn_datastream->setContentFromFile($tn_filename);
-      $tn_datastream->label = $label;
-      $tn_datastream->mimetype = 'image/png';
-      $tn_datastream->state = 'A';
-      $this->object->ingestDatastream($tn_datastream);
-      $this->log->lwrite('Finished processing', 'COMPLETE_DATASTREAM', $this->pid, $dsid);
+      $this->add_derivative($dsid, $output_file, 'image/png');
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
     }
@@ -197,15 +153,7 @@ class Derivative {
     try {
       $output_file = $this->temp_file . '_JPG.jpg';
       exec("convert -resize $resize $this->temp_file $output_file", $jpg_output, $return);
-//      $this->log->lwrite("JPG output: " . implode("\n", $jpg_output));
-      $jpeg_datastream = new NewFedoraDatastream($dsid, 'M', $this->object, $this->fedora_object->repository);
-      $jpeg_datastream->setContentFromFile($output_file);
-      $jpeg_datastream->label = $label;
-      $jpeg_datastream->mimetype = 'image/jpg';
-      $jpeg_datastream->state = 'A';
-      $this->object->ingestDatastream($jpeg_datastream);
-      unlink($output_file);
-      $this->log->lwrite('Finished processing', 'COMPLETE_DATASTREAM', $this->pid, $dsid);
+      $this->add_derivative($dsid, $output_file, 'image/jpg');
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
       unlink($output_file);
@@ -218,15 +166,7 @@ class Derivative {
     try {
       $output_file = $this->temp_file . '_TECHMD.xml';
       exec("/opt/fits/fits.sh -i $this->temp_file -o $output_file", $techmd_output, $return);
-//      $this->log->lwrite("TECHMD output: " . implode("\n", $techmd_output));
-      $techmd_datastream = new NewFedoraDatastream($dsid, 'M', $this->object, $this->fedora_object->repository);
-      $techmd_datastream->setContentFromFile($output_file);
-      $techmd_datastream->label = $label;
-      $techmd_datastream->mimetype = 'text/xml';
-      $techmd_datastream->state = 'A';
-      $this->object->ingestDatastream($techmd_datastream);
-      unlink($output_file);
-      $this->log->lwrite('Finished processing', 'COMPLETE_DATASTREAM', $this->pid, $dsid);
+      $this->add_derivative($dsid, $output_file, 'text/xml');
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
       unlink($output_file);
@@ -256,16 +196,24 @@ class Derivative {
   }
 
   function Scholar_Policy($dsid = 'POLICY', $label = "XACML policy") {
-    
+    $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, $dsid);
+    try {
+      $output_file = 'document-embargo.xml';
+      $this->add_derivative($dsid, $output_file, 'text/xml');
+    } catch (Exception $e) {
+      $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
+      unlink($output_file);
+    }
+    return $return;    
   }
 
   private function add_derivative($dsid, $output_file, $mimetype) {
-    $pdfa_datastream = new NewFedoraDatastream($dsid, 'M', $this->object, $this->fedora_object->repository);
-    $pdfa_datastream->setContentFromFile($output_file);
-    $pdfa_datastream->label = $label;
-    $pdfa_datastream->mimetype = $mimetype;
-    $pdfa_datastream->state = 'A';
-    $this->object->ingestDatastream($pdfa_datastream);
+    $datastream = new NewFedoraDatastream($dsid, 'M', $this->object, $this->fedora_object->repository);
+    $datastream->setContentFromFile($output_file);
+    $datastream->label = $label;
+    $datastream->mimetype = $mimetype;
+    $datastream->state = 'A';
+    $this->object->ingestDatastream($datastream);
     unlink($output_file);
     $this->log->lwrite('Finished processing', 'COMPLETE_DATASTREAM', $this->pid, $dsid);
   }
