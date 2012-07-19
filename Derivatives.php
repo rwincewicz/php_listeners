@@ -238,7 +238,7 @@ class Derivative {
     if ($this->created_datastream == 'OBJ') {
       $this->log->lwrite('Starting processing because the ' . $this->created_datastream . ' datastream was added', 'PROCESS_DATASTREAM', $this->pid, $dsid);
       try {
-        $output_file = $this->temp_file . '_Scholar_PDFA.xml';
+        $output_file = $this->temp_file . '_Scholar_PDFA.pdf';
         if ($this->mimetype == 'application/pdf') {
           exec("gs -dPDFA -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sOutputFile=$output_file $this->temp_file", $pdfa_output, $return);
         }
@@ -255,7 +255,7 @@ class Derivative {
         unlink($output_file);
         $this->log->lwrite('Finished processing', 'COMPLETE_DATASTREAM', $this->pid, $dsid);
       } catch (Exception $e) {
-        $this->log->lwrite("Could not create the $dsid derivative! - Command: $command \n Incoming DSID: $this->incoming_dsid \n Temp file: $this->temp_file \n" . implode("\n", $pdfa_output) . " - $e", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
+        $this->log->lwrite("Could not create the $dsid derivative! - Command: $command \n Incoming DSID: $this->incoming_dsid \n Temp file: $this->temp_file \n Message: " . implode("\n", $pdfa_output) . "\n Errror:  $e", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
         unlink($output_file);
       }
       return $return;
