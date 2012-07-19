@@ -243,7 +243,8 @@ class Derivative {
           exec("gs -dPDFA -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sOutputFile=$output_file $this->temp_file", $pdfa_output, $return);
         }
         else {
-          exec("java -jar /opt/jodconverter-core-3.0-beta-4/lib/jodconverter-core-3.0-beta-4.jar $this->temp_file $output_file", $pdfa_output, $return);
+          $command = "java -jar /opt/jodconverter-core-3.0-beta-4/lib/jodconverter-core-3.0-beta-4.jar $this->temp_file $output_file";
+          exec($command, $pdfa_output, $return);
         }
         $pdfa_datastream = new NewFedoraDatastream($dsid, 'M', $this->object, $this->fedora_object->repository);
         $pdfa_datastream->setContentFromFile($output_file);
@@ -254,7 +255,7 @@ class Derivative {
         unlink($output_file);
         $this->log->lwrite('Finished processing', 'COMPLETE_DATASTREAM', $this->pid, $dsid);
       } catch (Exception $e) {
-        $this->log->lwrite("Could not create the $dsid derivative! - " . implode("\n", $pdfa_output) . " - $e", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
+        $this->log->lwrite("Could not create the $dsid derivative! - Command: $command \n" . implode("\n", $pdfa_output) . " - $e", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
         unlink($output_file);
       }
       return $return;
