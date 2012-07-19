@@ -136,6 +136,7 @@ class Connect {
       
       // Disconnect
       $this->con->disconnect();
+      unset($this->con);
       
       // Close log file
       $this->log->lclose();
