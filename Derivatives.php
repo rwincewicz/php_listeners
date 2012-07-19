@@ -195,16 +195,15 @@ class Derivative {
     }
   }
 
-  function Scholar_Policy($dsid = 'POLICY', $label = "XACML policy") {
+  function Scholar_Policy($dsid = 'POLICY', $label = "Embargo policy") {
     $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, $dsid);
     try {
       $output_file = '/opt/php_listeners/document-embargo.xml';
       $this->add_derivative($dsid, $label, $output_file, 'text/xml');
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
-      unlink($output_file);
     }
-    return $return;    
+    return TRUE;    
   }
 
   private function add_derivative($dsid, $label, $output_file, $mimetype) {
