@@ -201,7 +201,8 @@ class Derivative {
       $output_file = '/opt/php_listeners/document-embargo.xml';
       $this->add_derivative($dsid, $label, $output_file, 'text/xml', FALSE);
       $datastream = new FedoraDatastream($dsid, $this->object, $this->fedora_object->repository);
-      $datastream->label = $label;
+      $datastream->state = 'I';
+      $datastream->state = 'A';
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
     }
