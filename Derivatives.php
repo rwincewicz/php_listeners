@@ -199,21 +199,23 @@ class Derivative {
     $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, $dsid);
     try {
       $output_file = '/opt/php_listeners/document-embargo.xml';
-      $this->add_derivative($dsid, $label, $output_file, 'text/xml');
+      $this->add_derivative($dsid, $label, $output_file, 'text/xml', FALSE);
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
     }
-    return TRUE;    
+    return TRUE;
   }
 
-  private function add_derivative($dsid, $label, $output_file, $mimetype) {
+  private function add_derivative($dsid, $label, $output_file, $mimetype, $delete = TRUE) {
     $datastream = new NewFedoraDatastream($dsid, 'M', $this->object, $this->fedora_object->repository);
     $datastream->setContentFromFile($output_file);
     $datastream->label = $label;
     $datastream->mimetype = $mimetype;
     $datastream->state = 'A';
     $this->object->ingestDatastream($datastream);
-    unlink($output_file);
+    if ($delete) {
+      unlink($output_file);
+    }
     $this->log->lwrite('Finished processing', 'COMPLETE_DATASTREAM', $this->pid, $dsid);
   }
 
