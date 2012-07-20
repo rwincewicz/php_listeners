@@ -129,9 +129,6 @@ class Connect {
         unset($this->msg);
       }
       
-      // Disconnect
-      $this->con->disconnect();
-      
       // Close log file
       $this->log->lclose();
     }
