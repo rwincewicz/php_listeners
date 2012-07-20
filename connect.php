@@ -59,7 +59,7 @@ class Connect {
       // do what you want with the message
       if ($this->msg != NULL) {
 //        sleep(1);
-        $this->log->lwrite('Message: ' . $this->msg, 'SERVER_INFO');
+        $this->log->lwrite('Message: ' . $this->msg->body, 'SERVER_INFO');
         $message = new Message($this->msg->body);
         $pid = $this->msg->headers['pid'];
         if (!$message->dsID) {
