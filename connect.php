@@ -45,7 +45,7 @@ class Connect {
 
     // Subscribe to the queue
     try {
-      $this->con->subscribe((string) $channel[0], array('activemq.prefetchSize' => 100));
+      $this->con->subscribe((string) $channel[0], array('activemq.prefetchSize' => 1));
     } catch (Exception $e) {
       $this->log->lwrite("Could not subscribe to the channel $channel - $e", 'SERVER', NULL, NULL, NULL, 'ERROR');
     }
