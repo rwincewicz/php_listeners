@@ -17,7 +17,7 @@ class Connect {
     include_once 'connect.php';
     include_once 'Derivatives.php';
     include_once 'Logging.php';
-    
+
     // Load config file
     $config_file = file_get_contents('config.xml');
     $this->config_xml = new SimpleXMLElement($config_file);
@@ -52,7 +52,7 @@ class Connect {
   }
 
   function listen() {
-    
+
     // Receive a message from the queue
     if ($this->msg = $this->con->readFrame()) {
 
@@ -96,28 +96,31 @@ class Connect {
           $extension = $object->extension;
           $extension = (string) $extension[0];
           $trigger_datastreams = $object->trigger_datastream;
-          if (!$trigger_datastreams) {
-            $trigger_datastreams = (array) $datastream;
-          }
           foreach ($content_models as $content_model) {
+            $this->log->lwrite('Content models: ' . implode(', ', $fedora_object->object->models), "SERVER_INFO");
+            $this->log->lwrite('Config models: ' . $content_model, "SERVER_INFO");
             if (in_array($content_model, $fedora_object->object->models)) {
               foreach ($namespaces as $namespace) {
+            $this->log->lwrite('Namespace: ' . $object_namespace, "SERVER_INFO");
+            $this->log->lwrite('Config namespace: ' . $namespace, "SERVER_INFO");                
                 if ((string) $namespace == (string) $object_namespace) {
+            $this->log->lwrite('Method: ' . $this->msg->headers['methodName'], "SERVER_INFO");
+            $this->log->lwrite('Config method: ' . implode(', ', $methods), "SERVER_INFO");                  
                   if (in_array($this->msg->headers['methodName'], $methods)) {
-            $this->log->lwrite('Triggers: ' . $message->dsID, "SERVER_INFO");
-            $this->log->lwrite('Config triggers: ' . implode(', ', $trigger_datastreams), "SERVER_INFO");                    
+                    $this->log->lwrite('Triggers: ' . $message->dsID, "SERVER_INFO");
+                    $this->log->lwrite('Config triggers: ' . implode(', ', $trigger_datastreams), "SERVER_INFO");
                     if (in_array($message->dsID, $trigger_datastreams) || $message->dsID == NULL) {
-                    $derivative = new Derivative($fedora_object, $datastream, $extension, $this->log, $message->dsID);
-                    foreach ($new_datastreams as $new_datastream) {   
+                      $derivative = new Derivative($fedora_object, $datastream, $extension, $this->log, $message->dsID);
+                      foreach ($new_datastreams as $new_datastream) {
 //                      $this->log->lwrite("Adding datastream '$new_datastream->dsid' with label '$new_datastream->label' using function '$new_datastream->function'", 'START_DATASTREAM', $pid, $new_datastream->dsid, $message->author);
-                      $function = (string) $new_datastream->function;
-                      $derivative->{$function}((string) $new_datastream->dsid, (string) $new_datastream->label);
+                        $function = (string) $new_datastream->function;
+                        $derivative->{$function}((string) $new_datastream->dsid, (string) $new_datastream->label);
+                      }
                     }
                   }
                 }
               }
             }
-          }
           }
           unset($namespaces);
           unset($namespace);
@@ -129,16 +132,17 @@ class Connect {
           unset($new_datastream);
           unset($derivative);
         }
-        
+
         // Mark the message as received in the queue
         $this->con->ack($this->msg);
         unset($this->msg);
       }
-      
+
       // Close log file
       $this->log->lclose();
     }
   }
+
 }
 
 ?>
