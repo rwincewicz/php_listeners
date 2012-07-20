@@ -106,7 +106,7 @@ class Connect {
               foreach ($namespaces as $namespace) {
                 if ((string) $namespace == (string) $object_namespace) {
                   if (in_array($this->msg->headers['methodName'], $methods)) {
-                    if (in_array($message->dsID, $trigger_datastreams)) {
+                    if (in_array($message->dsID, $trigger_datastreams) || $message->dsID == NULL) {
                     $derivative = new Derivative($fedora_object, $datastream, $extension, $this->log, $message->dsID);
                     foreach ($new_datastreams as $new_datastream) {   
 //                      $this->log->lwrite("Adding datastream '$new_datastream->dsid' with label '$new_datastream->label' using function '$new_datastream->function'", 'START_DATASTREAM', $pid, $new_datastream->dsid, $message->author);
