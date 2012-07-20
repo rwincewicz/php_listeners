@@ -40,8 +40,8 @@ class Connect {
 
     // Make a connection
     $this->con = new Stomp($stomp_url);
-    $this->con->sync = FALSE;
-//    $this->con->setReadTimeout(1);
+    $this->con->sync = TRUE;
+    $this->con->setReadTimeout(1);
 
     // Subscribe to the queue
     try {
@@ -59,7 +59,7 @@ class Connect {
       // do what you want with the message
       if ($this->msg != NULL) {
 //        sleep(1);
-        $this->log->lwrite('Message: ' . $this->msg->body, 'SERVER_INFO');
+//        $this->log->lwrite('Message: ' . $this->msg->body, 'SERVER_INFO');
         $message = new Message($this->msg->body);
         $pid = $this->msg->headers['pid'];
         if (!$message->dsID) {
