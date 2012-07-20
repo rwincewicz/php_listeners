@@ -95,7 +95,7 @@ class Connect {
           $new_datastreams = $object->derivative;
           $extension = $object->extension;
           $extension = (string) $extension[0];
-          $trigger_datastreams = $object->trigger_datastream;
+          $trigger_datastreams = (array) $object->trigger_datastream;
           foreach ($content_models as $content_model) {
             $this->log->lwrite('Content models: ' . implode(', ', $fedora_object->object->models), "SERVER_INFO");
             $this->log->lwrite('Config models: ' . $content_model, "SERVER_INFO");
