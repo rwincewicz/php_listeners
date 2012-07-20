@@ -8,7 +8,6 @@ $STDOUT = fopen('application.log', 'wb');
 $STDERR = fopen('error.log', 'wb');
 
 // Include libraries
-require_once("Stomp.php");
 include_once 'message.php';
 include_once 'fedoraConnection.php';
 include_once 'connect.php';

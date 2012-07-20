@@ -12,7 +12,7 @@ unset($connect);
 class Connect {
 
   function __construct() {
-    require_once("Stomp.php");
+//    require_once("Stomp.php");
     include_once 'message.php';
     include_once 'fedoraConnection.php';
     include_once 'connect.php';
@@ -44,11 +44,11 @@ class Connect {
     $this->con->sync = FALSE;
 //    $this->con->setReadTimeout(1);
     // Connect
-    try {
-      $this->con->connect();
-    } catch (Exception $e) {
-      $this->log->lwrite("Could not connect to Stomp server - $e", 'SERVER', NULL, NULL, NULL, 'ERROR');
-    }
+//    try {
+//      $this->con->connect();
+//    } catch (Exception $e) {
+//      $this->log->lwrite("Could not connect to Stomp server - $e", 'SERVER', NULL, NULL, NULL, 'ERROR');
+//    }
     // Subscribe to the queue
     try {
       $this->con->subscribe((string) $channel[0], array('activemq.prefetchSize' => 100));
