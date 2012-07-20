@@ -42,7 +42,7 @@ class Connect {
     // Make a connection
     $this->con = new Stomp($stomp_url);
     $this->con->sync = FALSE;
-    $this->con->setReadTimeout(1);
+//    $this->con->setReadTimeout(1);
     // Connect
     try {
       $this->con->connect();
