@@ -100,12 +100,12 @@ class Connect {
             $trigger_datastreams = (array) $datastream;
           }
           foreach ($content_models as $content_model) {
-            $this->log->lwrite('Triggers: ' . $message->dsID, "SERVER_INFO");
-            $this->log->lwrite('Config triggers: ' . implode(', ', $trigger_datastreams), "SERVER_INFO");
             if (in_array($content_model, $fedora_object->object->models)) {
               foreach ($namespaces as $namespace) {
                 if ((string) $namespace == (string) $object_namespace) {
                   if (in_array($this->msg->headers['methodName'], $methods)) {
+            $this->log->lwrite('Triggers: ' . $message->dsID, "SERVER_INFO");
+            $this->log->lwrite('Config triggers: ' . implode(', ', $trigger_datastreams), "SERVER_INFO");                    
                     if (in_array($message->dsID, $trigger_datastreams) || $message->dsID == NULL) {
                     $derivative = new Derivative($fedora_object, $datastream, $extension, $this->log, $message->dsID);
                     foreach ($new_datastreams as $new_datastream) {   
@@ -113,11 +113,11 @@ class Connect {
                       $function = (string) $new_datastream->function;
                       $derivative->{$function}((string) $new_datastream->dsid, (string) $new_datastream->label);
                     }
-                    }
                   }
                 }
               }
             }
+          }
           }
           unset($namespaces);
           unset($namespace);
