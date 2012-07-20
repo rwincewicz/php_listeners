@@ -19,6 +19,7 @@ class Derivative {
     $this->incoming_dsid = $incoming_dsid;
     $this->incoming_datastream = new FedoraDatastream($this->incoming_dsid, $this->fedora_object->object, $this->fedora_object->repository);
     $this->mimetype = $this->incoming_datastream->mimetype;
+    $this->log->lwrite('Mimetype: ' . $this->mimetype, 'SERVER_INFO');
     $this->extension = $extension;
     if ($this->incoming_dsid != NULL) {
       $this->temp_file = $fedora_object->saveDatastream($incoming_dsid, $extension);
