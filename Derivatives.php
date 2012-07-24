@@ -37,7 +37,7 @@ class Derivative {
     try {
       $output_file = $this->temp_file . '_OCR';
       exec("tesseract $this->temp_file $output_file -l $language -psm 1", $ocr_output, $return);
-      $this->add_derivative($dsid, $label, $output_file, 'text/plain');
+      $this->add_derivative($dsid, $label, $output_file . '.txt', 'text/plain');
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
       unlink($output_file . '.txt');
@@ -50,7 +50,7 @@ class Derivative {
     try {
       $output_file = $this->temp_file . '_HOCR';
       exec("tesseract $this->temp_file $output_file -l $language -psm 1 hocr", $hocr_output, $return);
-      $this->add_derivative($dsid, $label, $output_file, 'text/html');
+      $this->add_derivative($dsid, $label, $output_file . '.html', 'text/html');
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
       unlink($output_file . '.html');
