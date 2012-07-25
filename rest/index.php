@@ -1,7 +1,5 @@
 <?php
 
-require_once("../Stomp.php");
-
 switch ($_SERVER['REQUEST_METHOD']) {
   case 'GET':
 
