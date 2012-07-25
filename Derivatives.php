@@ -38,14 +38,16 @@ class Derivative {
       $output_file = $this->temp_file . '_OCR';
       exec("tesseract $this->temp_file $output_file -l $language -psm 1", $ocr_output, $return);
       if (file_exists($output_file . '.txt')) {
-        $this->add_derivative($dsid, $label, $output_file . '.txt', 'text/plain');
+        $ingest = $this->add_derivative($dsid, $label, $output_file . '.txt', 'text/plain');
       }
       else {
         $this->log->lwrite("Could not find the file '$output_file.txt' for the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
       }
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
-      unlink($output_file . '.txt');
+      if ($ingest) {
+        unlink($output_file . '.txt');
+      }
     }
     return $return;
   }
@@ -56,14 +58,16 @@ class Derivative {
       $output_file = $this->temp_file . '_HOCR';
       exec("tesseract $this->temp_file $output_file -l $language -psm 1 hocr", $hocr_output, $return);
       if (file_exists($output_file . '.html')) {
-        $this->add_derivative($dsid, $label, $output_file . '.html', 'text/html');
+        $inget = $this->add_derivative($dsid, $label, $output_file . '.html', 'text/html');
       }
       else {
         $this->log->lwrite("Could not find the file '$output_file.html' for the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
       }
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
-      unlink($output_file . '.html');
+      if ($ingest) {
+        unlink($output_file . '.html');
+      }
     }
     return $return;
   }
