@@ -180,7 +180,7 @@ class Derivative {
     $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, $dsid);
     try {
       $output_file = $this->temp_file . '_TECHMD.xml';
-      exec("/opt/fits/fits.sh -i $this->temp_file -o $output_file", $techmd_output, $return);
+      exec("/opt/fits/fits.sh -i $this->temp_file -o $output_file -xc", $techmd_output, $return);
       $this->add_derivative($dsid, $label, $output_file, 'text/xml');
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');

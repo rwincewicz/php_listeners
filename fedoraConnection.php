@@ -69,6 +69,7 @@ class ListenerObject {
       $datastream_array[] = $datastream->id;
     }
     if (!in_array($dsid, $datastream_array)) {
+      print "Datastream $dsid not present, will try again in 1 second.";
       sleep(1);
     }
     try {
