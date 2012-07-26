@@ -64,16 +64,26 @@ class ListenerObject {
     if (!isset($dsid)) {
       return;
     }
-
-    $datastream = $this->object->getDatastream($dsid);
-    $mime_type = $datastream->mimetype;
-    if (!$extension) {
-      $extension = system_mime_type_extension($mime_type);
+    $datastream_array = array();
+    foreach ($this->object as $datastream) {
+      $datastream_array[] = $datastream->id;
     }
-    $tempfile = temp_filename($extension);
-    $file_handle = fopen($tempfile, 'w');
-    fwrite($file_handle, $datastream->content);
-    fclose($file_handle);
+    if (!in_array($dsid, $datastream_array)) {
+      sleep(1);
+    }
+    try {
+      $datastream = $this->object->getDatastream($dsid);
+      $mime_type = $datastream->mimetype;
+      if (!$extension) {
+        $extension = system_mime_type_extension($mime_type);
+      }
+      $tempfile = temp_filename($extension);
+      $file_handle = fopen($tempfile, 'w');
+      fwrite($file_handle, $datastream->content);
+      fclose($file_handle);
+    } catch (Exception $e) {
+      print "Could not save datastream - $e";
+    }
 
     return $tempfile;
   }
