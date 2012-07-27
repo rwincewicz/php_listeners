@@ -41,7 +41,7 @@ class Derivative {
         $ingest = $this->add_derivative($dsid, $label, $output_file . '.txt', 'text/plain');
       }
       else {
-        $this->log->lwrite("Could not find the file '$output_file.txt' for the $dsid derivative!\nTesseract output: $ocr_output\nReturn value: $return", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
+        $this->log->lwrite("Could not find the file '$output_file.txt' for the $dsid derivative!\nTesseract output: " . implode(', ', $ocr_output) . "\nReturn value: $return", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
       }
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
@@ -61,7 +61,7 @@ class Derivative {
         $inget = $this->add_derivative($dsid, $label, $output_file . '.html', 'text/html');
       }
       else {
-        $this->log->lwrite("Could not find the file '$output_file.html' for the $dsid derivative!\nTesseract output: $hocr_output\nReturn value: $return", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
+        $this->log->lwrite("Could not find the file '$output_file.html' for the $dsid derivative!\nTesseract output: " . implode(', ', $hocr_output) . "\nReturn value: $return", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
       }
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
