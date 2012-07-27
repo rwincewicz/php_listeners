@@ -35,13 +35,18 @@ class Derivative {
   function OCR($dsid = 'OCR', $label = 'Scanned text', $language = 'eng') {
     $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, $dsid);
     try {
-      $output_file = $this->temp_file . '_OCR';
-      exec("tesseract $this->temp_file $output_file -l $language -psm 1", $ocr_output, $return);
-      if (file_exists($output_file . '.txt')) {
-        $ingest = $this->add_derivative($dsid, $label, $output_file . '.txt', 'text/plain');
+      if (file_exists($this->temp_file)) {
+        $output_file = $this->temp_file . '_OCR';
+        exec("tesseract $this->temp_file $output_file -l $language -psm 1", $ocr_output, $return);
+        if (file_exists($output_file . '.txt')) {
+          $ingest = $this->add_derivative($dsid, $label, $output_file . '.txt', 'text/plain');
+        }
+        else {
+          $this->log->lwrite("Could not find the file '$output_file.txt' for the $dsid derivative!\nTesseract output: " . implode(', ', $ocr_output) . "\nReturn value: $return", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
+        }
       }
       else {
-        $this->log->lwrite("Could not find the file '$output_file.txt' for the $dsid derivative!\nTesseract output: " . implode(', ', $ocr_output) . "\nReturn value: $return", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
+        $this->log->lwrite("Could not find the input file '$this->temp_file' for the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
       }
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
@@ -55,13 +60,18 @@ class Derivative {
   function HOCR($dsid = 'HOCR', $label = 'HOCR', $language = 'eng') {
     $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, $dsid);
     try {
-      $output_file = $this->temp_file . '_HOCR';
-      exec("tesseract $this->temp_file $output_file -l $language -psm 1 hocr", $hocr_output, $return);
-      if (file_exists($output_file . '.html')) {
-        $inget = $this->add_derivative($dsid, $label, $output_file . '.html', 'text/html');
+      if (file_exists($this->temp_file)) {
+        $output_file = $this->temp_file . '_HOCR';
+        exec("tesseract $this->temp_file $output_file -l $language -psm 1 hocr", $hocr_output, $return);
+        if (file_exists($output_file . '.html')) {
+          $inget = $this->add_derivative($dsid, $label, $output_file . '.html', 'text/html');
+        }
+        else {
+          $this->log->lwrite("Could not find the file '$output_file.html' for the $dsid derivative!\nTesseract output: " . implode(', ', $hocr_output) . "\nReturn value: $return", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
+        }
       }
       else {
-        $this->log->lwrite("Could not find the file '$output_file.html' for the $dsid derivative!\nTesseract output: " . implode(', ', $hocr_output) . "\nReturn value: $return", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
+        $this->log->lwrite("Could not find the input file '$this->temp_file' for the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
       }
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
