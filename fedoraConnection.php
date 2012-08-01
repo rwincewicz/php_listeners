@@ -64,6 +64,13 @@ class ListenerObject {
     if (!isset($dsid)) {
       return;
     }
+    $datastream_array = array();
+    foreach ($this->object as $datastream) {
+      $datastream_array[] = $datastream->id;
+    }
+    if (!in_array($dsid, $datastream_array)) {
+      print "Could not find the $dsid datastream!";
+    }
     try {
       $datastream = $this->object->getDatastream($dsid);
       $mime_type = $datastream->mimetype;

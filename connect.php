@@ -97,22 +97,22 @@ class Connect {
           $extension = (string) $extension[0];
           $trigger_datastreams = (array) $object->trigger_datastream;
           foreach ($content_models as $content_model) {
-//            $this->log->lwrite('Content models: ' . implode(', ', $fedora_object->object->models), "SERVER_INFO");
-//            $this->log->lwrite('Config models: ' . $content_model, "SERVER_INFO");
+            $this->log->lwrite('Content models: ' . implode(', ', $fedora_object->object->models), "SERVER_INFO");
+            $this->log->lwrite('Config models: ' . $content_model, "SERVER_INFO");
             if (in_array($content_model, $fedora_object->object->models)) {
               foreach ($namespaces as $namespace) {
-//                $this->log->lwrite('Namespace: ' . $object_namespace, "SERVER_INFO");
-//                $this->log->lwrite('Config namespace: ' . $namespace, "SERVER_INFO");
+                $this->log->lwrite('Namespace: ' . $object_namespace, "SERVER_INFO");
+                $this->log->lwrite('Config namespace: ' . $namespace, "SERVER_INFO");
                 if ((string) $namespace == (string) $object_namespace) {
-//                  $this->log->lwrite('Method: ' . $this->msg->headers['methodName'], "SERVER_INFO");
-//                  $this->log->lwrite('Config method: ' . implode(', ', $methods), "SERVER_INFO");
+                  $this->log->lwrite('Method: ' . $this->msg->headers['methodName'], "SERVER_INFO");
+                  $this->log->lwrite('Config method: ' . implode(', ', $methods), "SERVER_INFO");
                   if (in_array($this->msg->headers['methodName'], $methods)) {
-//                    $this->log->lwrite('Triggers: ' . $message->dsID, "SERVER_INFO");
-//                    $this->log->lwrite('Config triggers: ' . implode(', ', $trigger_datastreams), "SERVER_INFO");
+                    $this->log->lwrite('Triggers: ' . $message->dsID, "SERVER_INFO");
+                    $this->log->lwrite('Config triggers: ' . implode(', ', $trigger_datastreams), "SERVER_INFO");
                     if (in_array($message->dsID, $trigger_datastreams) || $message->dsID == NULL) {
                       $derivative = new Derivative($fedora_object, $datastream, $extension, $this->log, $message->dsID);
                       foreach ($new_datastreams as $new_datastream) {
-//                      $this->log->lwrite("Adding datastream '$new_datastream->dsid' with label '$new_datastream->label' using function '$new_datastream->function'", 'START_DATASTREAM', $pid, $new_datastream->dsid, $message->author);
+                      $this->log->lwrite("Adding datastream '$new_datastream->dsid' with label '$new_datastream->label' using function '$new_datastream->function'", 'START_DATASTREAM', $pid, $new_datastream->dsid, $message->author);
                         $function = (string) $new_datastream->function;
                         $derivative->{$function}((string) $new_datastream->dsid, (string) $new_datastream->label);
                       }
