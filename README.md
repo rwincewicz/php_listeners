@@ -7,7 +7,7 @@ Currently each instance of the listeners can only listen to one repository. If y
 processing server to monitor more than one repository then you can set up a second listener and 
 point it at the second repository.
 
- ### Requirements
+### Requirements
 
 * At least PHP 5.3
 
