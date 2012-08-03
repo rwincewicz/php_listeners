@@ -49,7 +49,7 @@ Installation instructions
 6\. Ensure firewall rules allow access from the listener server.
 
 
- ### Listener server setup
+### Listener server setup
 
 1\. Download the awesome tuque API from https://github.com/Islandora/tuque and ensure that it's in a sub directory called tuque.
 
@@ -62,7 +62,7 @@ Installation instructions
 5\. Ensure the firewall rules allow access from the Fedora server.
 
 
- ### REST interface setup
+### REST interface setup
 
 1\. Install apache.
 
