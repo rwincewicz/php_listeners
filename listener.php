@@ -22,7 +22,7 @@ ini_set('display_errors', 0);
 print "Parent : " . getmypid() . "\n";
 
 global $pids;
-$pids = Array();
+$pids = array();
 
 // Daemonize
 $pid = pcntl_fork();
@@ -68,7 +68,7 @@ pcntl_signal(SIGUSR1, "sig_handler");
 // All the daemon setup work is done now. Now do the actual tasks at hand
 // The program to launch
 $program = "/usr/bin/php";
-$arguments = Array("connect.php");
+$arguments = array("connect.php");
 $timer = 0;
 while (TRUE) {
   // In a real world scenario we would do some sort of conditional launch.

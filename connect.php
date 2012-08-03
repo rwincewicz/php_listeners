@@ -24,7 +24,6 @@ class Connect {
 
     // Logging settings
     $log_file = $this->config_xml->log->file;
-    $this->log->level = $this->config_xml->log->level;
 
     $this->log = new Logging();
     $this->log->lfile($log_file);
