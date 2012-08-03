@@ -7,14 +7,14 @@ Currently each instance of the listeners can only listen to one repository. If y
 processing server to monitor more than one repository then you can set up a second listener and 
 point it at the second repository.
 
- - Requirements
+ ### Requirements
 
 1. At least PHP 5.3
 
 Installation instructions
 -------------------------
 
- - Fedora server setup
+ ### Fedora server setup
 
 1. To enable Stomp support in the embedded JMS broker download the Spring distribution from http://www.springsource.org/download and copy the .jar files in the dist directory to $FEDORA_HOME/tomcat/webapps/fedora/WEB-INF/lib.
 
@@ -48,7 +48,7 @@ Installation instructions
 6. Ensure firewall rules allow access from the listener server.
 
 
- - Listener server setup
+ ### Listener server setup
 
 1. Download the awesome tuque API from https://github.com/Islandora/tuque and ensure that it's in a sub directory called tuque.
 
@@ -61,7 +61,7 @@ Installation instructions
 5. Ensure the firewall rules allow access from the Fedora server.
 
 
- - REST interface setup
+ ### REST interface setup
 
 1. Install apache.
 
