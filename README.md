@@ -13,7 +13,7 @@ point it at the second repository.
 
  - Installation instructions
 
-* Fedora server setup
+ - Fedora server setup
 
 1. To enable Stomp support in the embedded JMS broker download the Spring distribution from http://www.springsource.org/download and copy the .jar files in the dist directory to $FEDORA_HOME/tomcat/webapps/fedora/WEB-INF/lib.
 
@@ -44,7 +44,9 @@ point it at the second repository.
 
 5. Restart Fedora.
 
-* Lister server setup
+6. Ensure firewall rules allow access from the listener server.
+
+ - Listener server setup
 
 1. Download the awesome tuque API from https://github.com/Islandora/tuque and ensure that it's in a sub directory called tuque.
 
@@ -52,4 +54,16 @@ point it at the second repository.
 
 3. Copy the config.xml.sample to config.xml and update it to reflect your environment.
 
-4. Start the listener by running "php listener.php"
+4. Start the listener by running "php listener.php".
+
+5. Ensure the firewall rules allow access from the Fedora server.
+
+ - REST interface setup
+
+1. Install apache.
+
+2. Copy the listener_rest.conf file to the apache config directory and change the details to suit your environment.
+
+3. Ensure firewall rules allow access to the REST interface port.
+
+4. Restart apache.
