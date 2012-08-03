@@ -11,7 +11,8 @@ point it at the second repository.
 
 1. At least PHP 5.3
 
- - Installation instructions
+Installation instructions
+-------------------------
 
  - Fedora server setup
 
@@ -46,6 +47,7 @@ point it at the second repository.
 
 6. Ensure firewall rules allow access from the listener server.
 
+
  - Listener server setup
 
 1. Download the awesome tuque API from https://github.com/Islandora/tuque and ensure that it's in a sub directory called tuque.
@@ -57,6 +59,7 @@ point it at the second repository.
 4. Start the listener by running "php listener.php".
 
 5. Ensure the firewall rules allow access from the Fedora server.
+
 
  - REST interface setup
 
