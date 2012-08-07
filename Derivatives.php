@@ -93,6 +93,8 @@ class Derivative {
       $hocr_datastream->label = 'HOCR';
       $hocr_datastream->mimetype = 'text/html';
       $hocr_datastream->state = 'A';
+      $hocr_datastream->checksum = TRUE;
+      $hocr_datastream->checksumType = 'MD5';
       $this->object->ingestDatastream($hocr_datastream);
       $hocr_xml = new DOMDocument();
       $hocr_xml->load($output_file . '.html');
@@ -107,6 +109,8 @@ class Derivative {
       $encoded_datastream->label = $label;
       $encoded_datastream->mimetype = 'text/xml';
       $encoded_datastream->state = 'A';
+      $encoded_datastream->checksum = TRUE;
+      $encoded_datastream->checksumType = 'MD5';
       $this->object->ingestDatastream($encoded_datastream);
       unlink($output_file . '.html');
       $this->log->lwrite('Finished processing', 'COMPLETE_DATASTREAM', $this->pid, $dsid);
