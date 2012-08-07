@@ -135,7 +135,7 @@ class Derivative {
     try {
       $output_file = $this->temp_file . '_TN.jpg';
       exec("convert -thumbnail " . $height . "x" . $width . " $this->temp_file $output_file", $tn_output, $return);
-      $this->add_derivative($dsid, $label, $output_file, 'image/jpg');
+      $this->add_derivative($dsid, $label, $output_file, 'image/jpeg');
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
       unlink($output_file);
@@ -178,7 +178,7 @@ class Derivative {
     try {
       $output_file = $this->temp_file . '_JPG.jpg';
       exec("convert -resize $resize $this->temp_file $output_file", $jpg_output, $return);
-      $this->add_derivative($dsid, $label, $output_file, 'image/jpg');
+      $this->add_derivative($dsid, $label, $output_file, 'image/jpeg');
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
       unlink($output_file);
@@ -237,6 +237,7 @@ class Derivative {
     $datastream->label = $label;
     $datastream->mimetype = $mimetype;
     $datastream->state = 'A';
+    $datastream->logMessage = 'Added by php microservices';
     $return = $this->object->ingestDatastream($datastream);
     if ($delete) {
       unlink($output_file);

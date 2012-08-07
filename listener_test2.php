@@ -9,7 +9,6 @@ $user = new stdClass();
 $user->name = $user_string;
 $user->pass = $pass_string;
 
-while (TRUE) {
   try {
     $fedora_object = new ListenerObject($user, $fedora_url, 'islandora:root');
     $pid = 'islandora:' . rand('100', '999999');
@@ -28,6 +27,4 @@ var_dump($object);
   } catch (Exception $e) {
     echo $e;
   }
-  sleep('30');
-}
 ?>
