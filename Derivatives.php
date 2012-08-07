@@ -237,6 +237,8 @@ class Derivative {
     $datastream->label = $label;
     $datastream->mimetype = $mimetype;
     $datastream->state = 'A';
+    $datastream->checksum = TRUE;
+    $datastream->checksumType = 'MD5';
     $datastream->logMessage = 'Added by php microservices';
     $return = $this->object->ingestDatastream($datastream);
     if ($delete) {
