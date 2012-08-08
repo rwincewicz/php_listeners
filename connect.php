@@ -1,8 +1,10 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Class to listen for the JMS messages and filter them
+ * based on the rules defined in config.xml
+ * 
+ * @author Richard Wincewicz
  */
 
 $connect = new Connect();

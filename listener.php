@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Parent process that coordinates the listener child processes
+ * 
+ * @author Richard Wincewicz
+ */
+
 fclose(STDIN);
 fclose(STDOUT);
 fclose(STDERR);

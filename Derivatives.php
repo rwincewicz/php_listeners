@@ -1,9 +1,12 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Class to create derivatives and ingets them into Fedora
+ * 
+ * @author Richard Wincewicz
  */
+
+include_once 'PREMIS.php';
 
 class Derivative {
 
@@ -237,13 +240,15 @@ class Derivative {
 
   private function add_derivative($dsid, $label, $output_file, $mimetype, $delete = TRUE) {
     $datastream = new NewFedoraDatastream($dsid, 'M', $this->object, $this->fedora_object->repository);
+    $premis_object = new PREMIS();
+    $premis = $premis_object->render();
     $datastream->setContentFromFile($output_file);
     $datastream->label = $label;
     $datastream->mimetype = $mimetype;
     $datastream->state = 'A';
     $datastream->checksum = TRUE;
     $datastream->checksumType = 'MD5';
-    $datastream->logMessage = 'Added by php microservices';
+    $datastream->logMessage = $premis;
     $return = $this->object->ingestDatastream($datastream);
     if ($delete) {
       unlink($output_file);

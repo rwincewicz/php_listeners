@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Class to make an initial connection to Fedora
+ *  
+ * @author Richard Wincewicz
+ */
+
 //do this until we expost these in a module or library
 @include_once 'tuque/Datastream.php';
 @include_once 'tuque/FedoraApi.php';
