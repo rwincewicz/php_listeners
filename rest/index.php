@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * REST interface for querying the processing logs
+ * 
+ * @author Richard Wincewicz
+ */
+
 switch ($_SERVER['REQUEST_METHOD']) {
   case 'GET':
 
