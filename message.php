@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Class that parses some extra information from
+ * the JMS message. May not be necessary.
+ * 
+ * @author Richard Wincewicz
+ */
+
 class Message {
   
   function __construct($message = NULL) {

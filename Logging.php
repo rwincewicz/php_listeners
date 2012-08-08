@@ -1,10 +1,5 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * Logging class:
  * - contains lfile, lwrite and lclose public methods
@@ -14,6 +9,7 @@
  * - first call of lwrite method will open log file implicitly
  * - message is written with the following format: [d/M/Y:H:i:s] (script name) message
  */
+
 class Logging {
     // declare log file and file pointer as private properties
     private $log_file, $fp;
