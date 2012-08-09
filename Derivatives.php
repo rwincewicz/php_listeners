@@ -118,12 +118,11 @@ class Derivative {
         exec("convert -quality 99 " . $this->temp_file . " " . $this->temp_file . "_JPG2.jpg");
         $command = "tesseract " . $this->temp_file . "_JPG2.jpg " . $output_file . " -l $language -psm 1 hocr";
         exec($command, $hocr2_output, $return);
-        if (file_exists($output_file . '.html')) {
+        if (!file_exists($output_file . '.html')) {
           $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
           return $return;
         }
       }
-//      $this->log->lwrite("HOCR output: " . implode("\n", $hocr_output));
       $hocr_datastream = new NewFedoraDatastream("HOCR", 'M', $this->object, $this->fedora_object->repository);
       $hocr_datastream->setContentFromFile($output_file . '.html');
       $hocr_datastream->label = 'HOCR';
