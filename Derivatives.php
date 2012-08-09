@@ -55,7 +55,7 @@ class Derivative {
             $ingest = $this->add_derivative($dsid, $label, $output_file . '.txt', 'text/plain', $log_message);
           }
           else {
-            $this->log->lwrite("Could not find the file '$output_file.txt' for the $dsid derivative!\nTesseract output: " . implode(', ', $ocr_output) . "\nReturn value: $return\nRunning commands:\n$convert_command\n$command", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
+            $this->log->lwrite("Could not find the file '$output_file.txt' for the $dsid derivative!\nTesseract output: " . implode(', ', $ocr_output) . " - Return value: $return", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
           }
         }
       }
