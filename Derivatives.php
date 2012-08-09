@@ -46,7 +46,7 @@ class Derivative {
           $ingest = $this->add_derivative($dsid, $label, $output_file . '.txt', 'text/plain', $log_message);
         }
         else {
-          exec("convert -quality 100" . $this->temp_file . " " . $this->temp_file . "_JPG2.jpg");
+          exec("convert -quality 99" . $this->temp_file . " " . $this->temp_file . "_JPG2.jpg");
           $command = "tesseract " . $this->temp_file . "_JPG2.jpg" . $output_file . " -l $language -psm 1";
           exec($command, $ocr2_output, $return);
           if (file_exists($output_file . '.txt')) {
