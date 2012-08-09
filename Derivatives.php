@@ -81,7 +81,8 @@ class Derivative {
           $log_message = "$dsid derivative created by tesseract v3.0.1 using command - $command || SUCCESS";
           $ingest = $this->add_derivative($dsid, $label, $output_file . '.html', 'text/html', $log_message);
         }
-        exec("convert -quality 100" . $this->temp_file . " " . $this->temp_file . "_JPG2.jpg");
+        else {
+          exec("convert -quality 100" . $this->temp_file . " " . $this->temp_file . "_JPG2.jpg");
           $command = "tesseract " . $this->temp_file . "_JPG2.jpg" . $output_file . " -l $language -psm 1 hocr";
           exec($command, $hocr2_output, $return);
           if (file_exists($output_file . '.html')) {
@@ -91,6 +92,7 @@ class Derivative {
           else {
             $this->log->lwrite("Could not find the file '$output_file.html' for the $dsid derivative!\nTesseract output: " . implode(', ', $ocr_output) . "\nReturn value: $return", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
           }
+        }
       }
       else {
         $this->log->lwrite("Could not find the input file '$this->temp_file' for the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
@@ -111,13 +113,13 @@ class Derivative {
       $command = "tesseract $this->temp_file $output_file -l $language -psm 1 hocr";
       exec($command, $hocr_output, $return);
       if (!file_exists($output_file . '.html')) {
-      exec("convert -quality 100" . $this->temp_file . " " . $this->temp_file . "_JPG2.jpg");
-          $command = "tesseract " . $this->temp_file . "_JPG2.jpg" . $output_file . " -l $language -psm 1 hocr";
-          exec($command, $hocr2_output, $return);
-          if (file_exists($output_file . '.html')) {
-            $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
-            return $return;
-          }
+        exec("convert -quality 100" . $this->temp_file . " " . $this->temp_file . "_JPG2.jpg");
+        $command = "tesseract " . $this->temp_file . "_JPG2.jpg" . $output_file . " -l $language -psm 1 hocr";
+        exec($command, $hocr2_output, $return);
+        if (file_exists($output_file . '.html')) {
+          $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
+          return $return;
+        }
       }
 //      $this->log->lwrite("HOCR output: " . implode("\n", $hocr_output));
       $hocr_datastream = new NewFedoraDatastream("HOCR", 'M', $this->object, $this->fedora_object->repository);
