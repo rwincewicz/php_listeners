@@ -110,11 +110,11 @@ class Derivative {
       $output_file = $this->temp_file . '_HOCR';
       $command = "tesseract $this->temp_file $output_file -l $language -psm 1 hocr";
       exec($command, $hocr_output, $return);
-      if (!file_exists($output_file . '.txt')) {
+      if (!file_exists($output_file . '.html')) {
       exec("convert -quality 100" . $this->temp_file . " " . $this->temp_file . "_JPG2.jpg");
           $command = "tesseract " . $this->temp_file . "_JPG2.jpg" . $output_file . " -l $language -psm 1 hocr";
           exec($command, $hocr2_output, $return);
-          if (file_exists($output_file . '.txt')) {
+          if (file_exists($output_file . '.html')) {
             $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
             return $return;
           }
