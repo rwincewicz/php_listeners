@@ -48,7 +48,7 @@ class Derivative {
         else {
           $convert_command = "convert -quality 99 " . $this->temp_file . " " . $this->temp_file . "_JPG2.jpg";
           exec($convert_command, $convert_output, $return);
-          $command = "tesseract " . $this->temp_file . "_JPG2.jpg" . $output_file . " -l $language -psm 1";
+          $command = "tesseract " . $this->temp_file . "_JPG2.jpg " . $output_file . " -l $language -psm 1";
           exec($command, $ocr2_output, $return);
           if (file_exists($output_file . '.txt')) {
             $log_message = "$dsid derivative created by using ImageMagick to convert to jpg using command - $convert_command - and tesseract v3.0.1 using command - $command || SUCCESS ~~ OCR of original TIFF failed and so the image was converted to a JPG and reprocessed.";
@@ -85,7 +85,7 @@ class Derivative {
         else {
           $convert_command = "convert -quality 99 " . $this->temp_file . " " . $this->temp_file . "_JPG2.jpg";
           exec($convert_command);
-          $command = "tesseract " . $this->temp_file . "_JPG2.jpg" . $output_file . " -l $language -psm 1 hocr";
+          $command = "tesseract " . $this->temp_file . "_JPG2.jpg " . $output_file . " -l $language -psm 1 hocr";
           exec($command, $hocr2_output, $return);
           if (file_exists($output_file . '.html')) {
             $log_message = "$dsid derivative created by using ImageMagick to convert to jpg using command - $convert_command - and tesseract v3.0.1 using command - $command || SUCCESS ~~ OCR of original TIFF failed and so the image was converted to a JPG and reprocessed.";
@@ -116,7 +116,7 @@ class Derivative {
       exec($command, $hocr_output, $return);
       if (!file_exists($output_file . '.html')) {
         exec("convert -quality 99 " . $this->temp_file . " " . $this->temp_file . "_JPG2.jpg");
-        $command = "tesseract " . $this->temp_file . "_JPG2.jpg" . $output_file . " -l $language -psm 1 hocr";
+        $command = "tesseract " . $this->temp_file . "_JPG2.jpg " . $output_file . " -l $language -psm 1 hocr";
         exec($command, $hocr2_output, $return);
         if (file_exists($output_file . '.html')) {
           $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
