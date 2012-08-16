@@ -56,14 +56,12 @@ class Connect {
 
     // Receive a message from the queue
     if ($this->msg = $this->con->readFrame()) {
-
+      $this->log->lwrite($this->msg->body, 'SERVER', NULL, NULL, NULL, 'INFO');
       // do what you want with the message
       if ($this->msg != NULL) {
-//        sleep(1);
-//        $this->log->lwrite('Message: ' . $this->msg->body, 'SERVER_INFO');
         $message = new Message($this->msg->body);
         $pid = $this->msg->headers['pid'];
-        if (!$message->dsID) {
+        if (!isset($message->dsID)) {
           $message->dsID = NULL;
         }
         $this->log->lwrite("Method: " . $this->msg->headers['methodName'], 'MODIFY_OBJECT', $pid, $message->dsID, $message->author);

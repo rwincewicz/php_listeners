@@ -59,6 +59,9 @@ switch ($_SERVER['REQUEST_METHOD']) {
         }
         print json_encode($returned_lines);
         break;
+      case 'ping':
+        print "Microservices REST interface";
+        break;
       default:
         var_dump($_SERVER);
         print "Test";

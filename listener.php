@@ -13,11 +13,6 @@ $STDIN = fopen('/dev/null', 'r');
 $STDOUT = fopen('application.log', 'wb');
 $STDERR = fopen('error.log', 'wb');
 
-// Include libraries
-include_once 'message.php';
-include_once 'fedoraConnection.php';
-include_once 'connect.php';
-
 $config_file = file_get_contents('config.xml');
 $config_xml = new SimpleXMLElement($config_file);
 
